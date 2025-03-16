@@ -102,7 +102,9 @@ ChatPharoSpecChat >> clearChat [
 { #category : 'initialization' }
 ChatPharoSpecChat >> initializePresenters [
 
-    submitButton := self newButton
+    history := ChatPharoSpecChatHistory from: OrderedCollection new.
+	
+	submitButton := self newButton
         label: 'Submit';
         icon: (self iconNamed: #glamorousGo);
         help: 'Submit prompt to LLM';
@@ -115,8 +117,6 @@ ChatPharoSpecChat >> initializePresenters [
 			yourself.
 			
     inputField whenSubmitDo: [ :text | self askLocalModel ].
-
-    history := ChatPharoSpecChatHistory from: OrderedCollection new.
 
 	clearButton := self newButton
         label: 'Clear Chat';
