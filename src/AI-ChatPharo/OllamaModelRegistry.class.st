@@ -17,11 +17,16 @@ Class {
 { #category : 'model-accessing' }
 OllamaModelRegistry >> allModels [
 
-	^ OllamaAPI new listModels
+	[ OllamaAPI new listModels ]
+		on: Error
+		do: [ ^ #('codellama:7b') ]
+
 ]
 
 { #category : 'model-accessing' }
 OllamaModelRegistry >> defaultModel [
 
-	^ self allModels ifNotEmpty: [ :list | list first ] ifEmpty: [ nil ]
+	^ self allModels
+		ifNotEmpty: [ :list | list first ]
+		ifEmpty: [ 'codellama:7b' ] 
 ]
