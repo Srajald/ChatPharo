@@ -21,6 +21,8 @@ ChatPharoPresenter2 >> addNewChat [
     | newPage chatName|
 	 chatName := 'Chat ', notebook pages size asString.
 	 model newChat.
+	 model chats last title: chatName.
+
     newPage := SpNotebookPage
         title: chatName
         icon: (self iconNamed: #announcement)
@@ -48,9 +50,17 @@ ChatPharoPresenter2 >> deleteChat: aPageTitle [
     
     (self confirm: 'Are you sure you want to delete this chat?')
         ifTrue: [
+			model deleteChatWithTitle: aPageTitle.
             notebook removePage: pageToDelete.
         ].
 
+]
+
+{ #category : 'initialization' }
+ChatPharo2 >> deleteChatWithTitle: aTitle [
+    chats := chats reject: [ :chat |
+        chat title = aTitle
+    ].
 ]
 
 { #category : 'initialization' }
@@ -159,4 +169,16 @@ ChatPharoPresenter2 >> sendMessage [
 ChatPharoPresenter2 >> setModelBeforeInitialization: anObject [
 
 	model := anObject
+]
+
+{ #category : 'initialization' }
+ChatPharoChat2 >> title [
+
+	^ title
+]
+
+{ #category : 'initialization' }
+ChatPharoChat2 >> title: aString [
+
+	title := aString
 ]
