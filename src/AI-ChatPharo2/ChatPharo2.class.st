@@ -32,10 +32,12 @@ ChatPharo2 >> initialize [
 
 { #category : 'initialization' }
 ChatPharo2 >> newChat [
-
-	chats add: (ChatPharoChat2 new
+	| chat |
+	chat := ChatPharoChat2 new
 		ollamaApi: self settings ollamaApi;
-		yourself)
+		yourself.
+	chats add: chat.
+	^ chat
 ]
 
 { #category : 'initialization' }

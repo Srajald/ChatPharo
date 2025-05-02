@@ -20,8 +20,9 @@ ChatPharoPresenter2 >> addNewChat [
 
     | newPage chatName|
 	 chatName := 'Chat ', notebook pages size asString.
-	 model newChat.
-	 model chats last title: chatName.
+	 | chat |
+     chat := model newChat.
+     chat title: chatName.
 
     newPage := SpNotebookPage
         title: chatName
