@@ -18,9 +18,8 @@ Class {
 { #category : 'adding' }
 ChatPharoPresenter2 >> addNewChat [
 
-    | newPage chatName|
+    | newPage chatName chat |
 	 chatName := 'Chat ', notebook pages size asString.
-	 | chat |
      chat := model newChat.
      chat title: chatName.
 
