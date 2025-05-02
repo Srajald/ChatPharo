@@ -44,6 +44,13 @@ ChatPharo2 >> presenter [
 	^ ChatPharoPresenter2 on: self 
 ]
 
+{ #category : 'initialization' }
+ChatPharo2 >> deleteChatWithTitle: aTitle [
+    chats := chats reject: [ :chat |
+        chat title = aTitle
+    ].
+]
+
 { #category : 'accessing' }
 ChatPharo2 >> settings [
 

@@ -57,13 +57,6 @@ ChatPharoPresenter2 >> deleteChat: aPageTitle [
 ]
 
 { #category : 'initialization' }
-ChatPharo2 >> deleteChatWithTitle: aTitle [
-    chats := chats reject: [ :chat |
-        chat title = aTitle
-    ].
-]
-
-{ #category : 'initialization' }
 ChatPharoPresenter2 >> initializePresenters [
 
 	notebook := self newNotebook.
@@ -169,16 +162,4 @@ ChatPharoPresenter2 >> sendMessage [
 ChatPharoPresenter2 >> setModelBeforeInitialization: anObject [
 
 	model := anObject
-]
-
-{ #category : 'initialization' }
-ChatPharoChat2 >> title [
-
-	^ title
-]
-
-{ #category : 'initialization' }
-ChatPharoChat2 >> title: aString [
-
-	title := aString
 ]
