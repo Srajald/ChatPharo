@@ -97,12 +97,12 @@ ChatPharoChatPresenter2 >> sendMessage [
 
     [ 
         model sendMessage: originalText.
-        [ 
-            messageTextField
-                text: '';
-                enabled: true;
-                takeKeyboardFocus.
-        ] valueOnMainThread.
+        UIManager default defer: [
+		messageTextField
+			text: '';
+			enabled: true;
+			takeKeyboardFocus.
+	    ]
     ] forkAt: Processor userBackgroundPriority.
 ]
 
