@@ -87,8 +87,23 @@ ChatPharoChatPresenter2 >> initializeWindow: aWindowPresenter [
 
 { #category : 'initialization' }
 ChatPharoChatPresenter2 >> sendMessage [
+    | originalText |
 
-	model sendMessage: messageTextField text
+    originalText := messageTextField text.
+
+    messageTextField
+        text: 'Sending...';
+        enabled: false.
+
+    [ 
+        model sendMessage: originalText.
+        [ 
+            messageTextField
+                text: '';
+                enabled: true;
+                takeKeyboardFocus.
+        ] valueOnMainThread.
+    ] forkAt: Processor userBackgroundPriority.
 ]
 
 { #category : 'accessing - model' }
