@@ -103,11 +103,9 @@ ChatPharoPresenter2 >> initializePresenters [
 		action: [ self updateConnectionStatusOnce ];
 		yourself).
 
-	
-	connectionStatusLabel := SpTextPresenter new
-	    text: 'Checking connection...';
-	    textColor: Color gray;
-	    yourself.
+	connectionStatusLabel := SpTextPresenter new.
+    connectionStatusLabel text: 'Checking connection...'.
+    connectionStatusLabel labelModel foreground: Color gray.
 
 	self updateConnectionStatus.
 ]
@@ -131,12 +129,11 @@ ChatPharoPresenter2 >> updateConnectionStatusOnce [
 		ifFalse: [ 'Disconnected' ].
 	color := (connectedText = 'Connected') ifTrue: [ Color green ] ifFalse: [ Color red ].
 
-	connectionStatusLabel
-		text: connectedText;
-	    textColor: color;
-		help: (connectedText = 'Connected'
-			ifTrue: [ 'Connected to Ollama server' ]
-			ifFalse: [ 'Not connected to Ollama server' ]).
+	connectionStatusLabel text: connectedText.
+    connectionStatusLabel labelModel foreground: color.
+	connectionStatusLabel help: (connectedText = 'Connected'
+		ifTrue: [ 'Connected to Ollama server' ]
+		ifFalse: [ 'Not connected to Ollama server' ]).
 	
 	connectionStatusLabel updateContents.
 ]
