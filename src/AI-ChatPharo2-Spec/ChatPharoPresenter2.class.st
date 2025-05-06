@@ -103,7 +103,7 @@ ChatPharoPresenter2 >> initializePresenters [
 		yourself).
 
 	
-	connectionStatusLabel := SpTextPresenter new
+	connectionStatusLabel := SpToolbarLabelPresenter new
 		text: 'Checking connection...';
 		yourself.
 
