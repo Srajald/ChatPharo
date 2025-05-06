@@ -103,9 +103,8 @@ ChatPharoPresenter2 >> initializePresenters [
 		yourself).
 
 	
-	connectionStatusLabel := SpLabelPresenter new
-		label: 'Checking connection...';
-		foreground: Color gray;
+	connectionStatusLabel := SpTextPresenter new
+		text: 'Checking connection...';
 		yourself.
 
 	toolbar add: connectionStatusLabel.
@@ -132,8 +131,8 @@ ChatPharoPresenter2 >> updateConnectionStatusOnce [
 	color := (connectedText = 'Connected') ifTrue: [ Color green ] ifFalse: [ Color red ].
 
 	connectionStatusLabel
-		label: connectedText;
-		foreground: color;
+		text: connectedText;
+	    color: color;
 		help: (connectedText = 'Connected'
 			ifTrue: [ 'Connected to Ollama server' ]
 			ifFalse: [ 'Not connected to Ollama server' ]).
