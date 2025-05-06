@@ -34,8 +34,7 @@ ChatPharoPresenter2 >> defaultLayout [
 	"Layout of ChatPharo. Nicer design wanted..."
 
     ^ SpBoxLayout newTopToBottom
-		add: toolbar expand: false;
-		add: connectionStatusLabel expand: false;
+		  add: toolbar expand: false;
         add: notebook;
         yourself
 ]
@@ -103,9 +102,13 @@ ChatPharoPresenter2 >> initializePresenters [
 		action: [ self updateConnectionStatusOnce ];
 		yourself).
 
-	connectionStatusLabel := SpTextPresenter new.
-    connectionStatusLabel text: 'Checking connection...'.
-    connectionStatusLabel labelModel foreground: Color gray.
+	connectionStatusLabel := SpToolbarButtonPresenter new
+		label: 'Checking connection...';
+		action: [ ];
+		enabled: false;
+		yourself.
+
+	toolbar add: connectionStatusLabel.
 
 	self updateConnectionStatus.
 ]
@@ -127,15 +130,12 @@ ChatPharoPresenter2 >> updateConnectionStatusOnce [
 	connectedText := ((model agent) notNil and: [ model agent isConnected ])
 		ifTrue: [ 'Connected' ]
 		ifFalse: [ 'Disconnected' ].
-	color := (connectedText = 'Connected') ifTrue: [ Color green ] ifFalse: [ Color red ].
 
-	connectionStatusLabel text: connectedText.
-    connectionStatusLabel labelModel foreground: color.
-	connectionStatusLabel help: (connectedText = 'Connected'
-		ifTrue: [ 'Connected to Ollama server' ]
-		ifFalse: [ 'Not connected to Ollama server' ]).
-	
-	connectionStatusLabel updateContents.
+	connectionStatusLabel
+		label: connectedText;
+		help: (connectedText = 'Connected'
+			ifTrue: [ 'Connected to Ollama server' ]
+			ifFalse: [ 'Not connected to Ollama server' ]).
 ]
 
 { #category : 'initialization' }
