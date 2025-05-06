@@ -2,7 +2,10 @@ Class {
     #name : 'ChatPharoConnectionStatus',
     #superclass : 'SpToolbarItemPresenter',
     #instVars : [
-        'labelMorph'
+        'labelMorph',
+        'label',
+        'color',
+        'help'
     ],
     #category : 'AI-ChatPharo2-Spec',
     #package : 'AI-ChatPharo2-Spec'
@@ -10,7 +13,7 @@ Class {
 
 { #category : 'building' }
 ChatPharoConnectionStatus >> buildMorph [
-
+    
     labelMorph := LabelMorph new.
     labelMorph label: self label.
     self color ifNotNil: [ labelMorph color: self color ].
@@ -18,23 +21,41 @@ ChatPharoConnectionStatus >> buildMorph [
     ^ labelMorph
 ]
 
-{ #category : 'updating' }
+{ #category : 'accessing' }
+ChatPharoConnectionStatus >> label [
+
+    ^ label
+]
+
+{ #category : 'accessing' }
 ChatPharoConnectionStatus >> label: aString [
 
-    super label: aString.
+    label := aString.
     labelMorph ifNotNil: [ labelMorph label: aString ]
 ]
 
-{ #category : 'updating' }
+{ #category : 'accessing' }
+ChatPharoConnectionStatus >> color [
+
+    ^ color
+]
+
+{ #category : 'accessing' }
 ChatPharoConnectionStatus >> color: aColor [
 
-    super color: aColor.
+    color := aColor.
     labelMorph ifNotNil: [ labelMorph color: aColor ]
 ]
 
-{ #category : 'updating' }
+{ #category : 'accessing' }
+ChatPharoConnectionStatus >> help [
+
+    ^ help
+]
+
+{ #category : 'accessing' }
 ChatPharoConnectionStatus >> help: aString [
 
-    super help: aString.
+    help := aString.
     labelMorph ifNotNil: [ labelMorph help: aString ]
 ]
