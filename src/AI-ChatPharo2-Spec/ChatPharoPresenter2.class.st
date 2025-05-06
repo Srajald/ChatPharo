@@ -102,7 +102,7 @@ ChatPharoPresenter2 >> initializePresenters [
 		action: [ self updateConnectionStatusOnce ];
 		yourself).
 	
-	connectionStatusLabel := SpLabelPresenter new
+	connectionStatusLabel := ChatPharoConnectionStatus new
     label: 'Checking connection...';
     yourself.
 
@@ -135,7 +135,7 @@ ChatPharoPresenter2 >> updateConnectionStatusOnce [
         help: (isConnected
             ifTrue: [ 'Connected to Ollama server' ]
             ifFalse: [ 'Not connected to Ollama server' ]).
-			
+
 ]
 
 { #category : 'initialization' }
