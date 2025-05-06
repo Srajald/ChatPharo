@@ -103,8 +103,10 @@ ChatPharoPresenter2 >> initializePresenters [
 		yourself).
 
 	
-	connectionStatusLabel := SpToolbarLabelPresenter new
-		text: 'Checking connection...';
+	connectionStatusLabel := SpToolbarButtonPresenter new
+		label: 'Checking connection...';
+		action: [ ];
+		enabled: false;
 		yourself.
 
 	toolbar add: connectionStatusLabel.
@@ -124,6 +126,7 @@ ChatPharoPresenter2 >> updateConnectionStatus [
 
 { #category : 'status' }
 ChatPharoPresenter2 >> updateConnectionStatusOnce [
+
 	| connectedText color |
 	connectedText := ((model agent) notNil and: [ model agent isConnected ])
 		ifTrue: [ 'Connected' ]
@@ -131,8 +134,8 @@ ChatPharoPresenter2 >> updateConnectionStatusOnce [
 	color := (connectedText = 'Connected') ifTrue: [ Color green ] ifFalse: [ Color red ].
 
 	connectionStatusLabel
-		text: connectedText;
-	    color: color;
+		label: connectedText;
+	    foreground: color;
 		help: (connectedText = 'Connected'
 			ifTrue: [ 'Connected to Ollama server' ]
 			ifFalse: [ 'Not connected to Ollama server' ]).
