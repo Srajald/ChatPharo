@@ -103,10 +103,9 @@ ChatPharoPresenter2 >> initializePresenters [
 		yourself).
 
 	
-	connectionStatusLabel := SpToolbarButtonPresenter new
+	connectionStatusLabel := SpLabelPresenter new
 		label: 'Checking connection...';
-		action: [ ];
-		enabled: false;
+		foreground: Color gray;
 		yourself.
 
 	toolbar add: connectionStatusLabel.
