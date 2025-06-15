@@ -43,7 +43,13 @@ ChatPharoMessagePresenter >> defaultLayout [
 ChatPharoMessagePresenter >> initializePresenters [ 
 
 	contentPresenter := MicrodownPresenter new.
+	contentPresenter layout expandVertically: true.
+
 	answerPresenter := MicrodownPresenter new.
+	answerPresenter layout expandVertically: true.
+
+	self layout wrapContents: false.
+	self layout expandVertically: true.
 ]
 
 { #category : 'layout' }

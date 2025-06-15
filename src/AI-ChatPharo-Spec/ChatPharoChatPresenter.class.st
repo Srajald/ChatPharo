@@ -36,6 +36,7 @@ ChatPharoChatPresenter >> connectPresenters [
 	
 	model whenAnswerReceivedDo: [ :message | 
 		messagesLayout add: message presenter.
+		message presenter layout expandVertically: true.
 		scrollPane scrollToEnd.	
 	]
 ]
@@ -44,6 +45,7 @@ ChatPharoChatPresenter >> connectPresenters [
 ChatPharoChatPresenter >> defaultLayout [
     scrollPane := SpScrollPanePresenter new.
     scrollPane content: messagesLayout.
+	scrollPane expandVertically: true.
 
     ^ SpBoxLayout newVertical
         add: scrollPane expand: true;
@@ -91,6 +93,7 @@ ChatPharoChatPresenter >> initializePresenters [
 
 	messagesLayout := SpBoxLayout newVertical.
 	messagesLayout wrapContents: false.
+	messagesLayout expandVertically: true.
 ]
 
 { #category : 'initialization' }
