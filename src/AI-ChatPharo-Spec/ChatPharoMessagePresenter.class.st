@@ -33,9 +33,9 @@ ChatPharoMessagePresenter >> defaultLayout [
 
 	^ SpBoxLayout newVertical
 		add: 'User' expand: false;
-		add: contentPresenter;
+		add: contentPresenter expand: true;
 		add: 'Assistant' expand: false;
-		add: answerPresenter;
+		add: answerPresenter expand: true;
 		yourself
 ]
 
@@ -43,13 +43,7 @@ ChatPharoMessagePresenter >> defaultLayout [
 ChatPharoMessagePresenter >> initializePresenters [ 
 
 	contentPresenter := MicrodownPresenter new.
-	contentPresenter layout expandVertically: true.
-
 	answerPresenter := MicrodownPresenter new.
-	answerPresenter layout expandVertically: true.
-
-	self layout wrapContents: false.
-	self layout expandVertically: true.
 ]
 
 { #category : 'layout' }
