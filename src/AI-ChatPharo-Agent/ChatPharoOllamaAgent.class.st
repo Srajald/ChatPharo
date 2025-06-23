@@ -41,18 +41,26 @@ ChatPharoOllamaAgent class >> validateModel: aModelName [
 { #category : 'api' }
 ChatPharoOllamaAgent class >> deleteModel: aModelName [ 
 
-        self isReachable ifFalse: [
-                ^ self error: 'Ollama server not reachable' ].
-        
-		self validateModel: aModelName.
-		
-		ZnClient new
-                url:
-                        'http://' , self defaultHost , ':' , self defaultPort , '/api/delete';
-                entity: (ZnEntity with:
-                                         (STONJSON toString: { (#name -> aModelName) } asDictionary));
-                delete;
-                yourself
+    self isReachable ifFalse: [
+        ^ self error: 'Ollama server not reachable' ].
+
+    self validateModel: aModelName.
+
+    | payload client response |
+    payload := STONJSON toString: { 'name' -> aModelName } asDictionary.
+
+    client := ZnClient new.
+    client
+        url: 'http://' , self defaultHost , ':' , self defaultPort , '/api/delete';
+        method: 'DELETE';
+        contentType: ZnMimeType applicationJson;
+        entity: (ZnEntity with: payload).
+
+    response := client execute.
+
+    (response isSuccess or: [ response statusCode = 200 ]) ifFalse: [
+        ^ self error: 'Delete failed. Status: ', response statusLine printString , ' | Response: ', response contents
+    ].
 ]
 
 { #category : 'api' }
