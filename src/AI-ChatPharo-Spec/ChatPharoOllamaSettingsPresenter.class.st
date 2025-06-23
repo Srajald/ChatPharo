@@ -149,16 +149,16 @@ ChatPharoOllamaSettingsPresenter >> initializePresenters [
 		                 yourself.
 	
 	deleteButton := self newButton
-						label: 'Delete';
-						icon: (self iconNamed: #delete);
-						action: [
-							self confirm: 'Are you sure you want to delete model ', installInput text, '?' 
-								ifTrue: [
-									model class deleteModel: installInput text.
-									self refreshModels
-								].
-						];
-						yourself.
+					label: 'Delete';
+					icon: (self iconNamed: #delete);
+					action: [
+						(UIManager default confirm: 'Are you sure you want to delete model ', installInput text, '?')
+							ifTrue: [
+								model class deleteModel: installInput text.
+								self refreshModels
+							].
+					];
+					yourself.
 
 	testButton := self newButton
 						label: 'Test Connection';
