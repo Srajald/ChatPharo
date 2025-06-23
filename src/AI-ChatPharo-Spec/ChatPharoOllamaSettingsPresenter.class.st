@@ -139,8 +139,6 @@ ChatPharoOllamaSettingsPresenter >> initializePresenters [
 		                 label: 'Install';
 		                 icon: (self iconNamed: #add);
 		                 action: [
-				                 model class pullModel: installInput text.
-				                 self refreshModels.
 				                 (model class isValidModel: installInput text)
 					                 ifTrue: [
 							                 model class pullModel: installInput text.
