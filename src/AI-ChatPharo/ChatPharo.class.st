@@ -101,14 +101,14 @@ ChatPharo >> settings [
 ChatPharo >> runWelcomeMessageOnce [
 	settings hasSeenWelcome ifTrue: [ ^ self ].
 
-    | welcomeChat welcomeAgent |
-    welcomeAgent := ChatPharoWelcomeAgent new.
+	| welcomeChat welcomeAgent |
+	welcomeAgent := ChatPharoWelcomeAgent new.
 
-    welcomeChat := ChatPharoChat new.
-    welcomeChat agent: welcomeAgent.
+	welcomeChat := ChatPharoChat new.
+	welcomeChat agent: welcomeAgent.
 
-    chats add: welcomeChat.
-    welcomeChat sendMessage: ''.
+	chats add: welcomeChat.
+	welcomeChat sendMessage: ''.
 
 	settings hasSeenWelcome: true.
 ]
