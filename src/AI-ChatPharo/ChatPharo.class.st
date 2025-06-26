@@ -62,7 +62,8 @@ ChatPharo >> initialize [
 	settings := ChatPharoSettings default.
 	settings agent systemPrompt isEmpty ifTrue: [
                 settings agent systemPrompt: ChatPharoAgent defaultSystemPrompt ].
-	chats := OrderedCollection new
+	chats := OrderedCollection new.
+	self runWelcomeMessageOnce.
 ]
 
 { #category : 'initialization' }
@@ -94,4 +95,20 @@ ChatPharo >> removeChatAt: anIndex [
 ChatPharo >> settings [
 
 	^ settings
+]
+
+{ #category : 'initialization' }
+ChatPharo >> runWelcomeMessageOnce [
+	settings hasSeenWelcome ifTrue: [ ^ self ].
+
+    | welcomeChat welcomeAgent |
+    welcomeAgent := ChatPharoWelcomeAgent new.
+
+    welcomeChat := ChatPharoChat new.
+    welcomeChat agent: welcomeAgent.
+
+    chats add: welcomeChat.
+    welcomeChat sendMessage: ''.
+
+	settings hasSeenWelcome: true.
 ]
