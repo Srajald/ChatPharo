@@ -64,6 +64,38 @@ ChatPharoChatTest >> testCancelTwiceIsSafe [
 ]
 
 { #category : 'running' }
+ChatPharoChatTest >> testClearCacheForcesBackendCall [
+
+        | firstSize |
+        chat sendMessage: 'hello'.
+        [ (chat instVarNamed: #promptProcess) isTerminated ] whileFalse: [ (Delay forMilliseconds: 10) wait ].
+        firstSize := mockApi history size.
+
+        chat clearCache.
+        chat sendMessage: 'hello'.
+        [ (chat instVarNamed: #promptProcess) isTerminated ] whileFalse: [ (Delay forMilliseconds: 10) wait ].
+
+        self assert: mockApi history size equals: firstSize + 1.
+
+        chat sendMessage: 'hello'.
+
+        self assert: mockApi history size equals: firstSize + 1.
+]
+
+{ #category : 'running' }
+ChatPharoChatTest >> testClearChatClearsCache [ 
+
+        | firstSize |
+        chat sendMessage: 'hello'.
+        [ (chat instVarNamed: #promptProcess) isTerminated ] whileFalse: [ (Delay forMilliseconds: 10) wait ].
+        firstSize := mockApi history size.
+
+        chat clearChat.
+
+        self assert: mockApi history size equals: firstSize .
+]
+
+{ #category : 'running' }
 ChatPharoChatTest >> testClearChatEmptiesMessagesAndStopsProcess [ 
 
 	chat sendMessage: 'Hello'.
@@ -116,6 +148,22 @@ ChatPharoChatTest >> testMultipleConcurrentMessagesHandledSafely [
     ] whileFalse: [ (Delay forMilliseconds: 10) wait ].
 
     self assert: chat messages size >= 1.
+]
+
+{ #category : 'running' }
+ChatPharoChatTest >> testSameQuestionReturnsCachedAnswer [ 
+
+    | firstSize firstAnswer |
+    chat sendMessage: 'repeat'.
+    [ (chat instVarNamed: #promptProcess) isTerminated ] whileFalse: [ (Delay forMilliseconds: 10) wait ].
+    firstSize := mockApi history size.
+    firstAnswer := chat messages last answer.
+
+    chat sendMessage: 'repeat'.
+
+    self assert: chat messages size equals: 2.
+    self assert: (chat messages last answer) equals: firstAnswer.
+    self assert: mockApi history size equals: firstSize.
 ]
 
 { #category : 'running' }
