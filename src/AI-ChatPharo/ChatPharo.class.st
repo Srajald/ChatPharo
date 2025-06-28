@@ -99,9 +99,9 @@ ChatPharo >> settings [
 
 { #category : 'initialization' }
 ChatPharo >> runWelcomeMessageOnce [
-	settings hasSeenWelcome ifTrue: [ ^ self ].
-
 	| welcomeChat welcomeAgent |
+	
+	settings hasSeenWelcome ifTrue: [ ^ self ].
 	welcomeAgent := ChatPharoWelcomeAgent new.
 
 	welcomeChat := ChatPharoChat new.
