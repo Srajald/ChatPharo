@@ -139,7 +139,12 @@ toolbar add: (SpToolbarButtonPresenter new
              action: [ self updateConnectionStatusOnce ];
              yourself).
 
-	self addFull: notebook.
+	self layout: (
+		SpBoxLayout newVertical
+			add: toolbar expand: false;
+			add: notebook expand: true;
+			yourself
+	).
 
 	model chats doWithIndex: [ :chat :i |
 		| title icon page |
