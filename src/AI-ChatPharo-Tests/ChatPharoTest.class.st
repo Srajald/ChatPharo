@@ -40,9 +40,9 @@ ChatPharoTest >> testInitializeStartsEmpty [
 
 { #category : 'running' }
 ChatPharoTest >> testNewChat [
-	self assert: app chats isEmpty.
-	app newChat.
 	self assert: app chats size equals: 1.
+	app newChat.
+	self assert: app chats size equals: 2.
 	self assert: (app chats anyOne isKindOf: ChatPharoChat).
 ]
 
