@@ -35,7 +35,7 @@ ChatPharoTest >> testAddNewChat [
 { #category : 'running' }
 ChatPharoTest >> testInitializeStartsEmpty [
 
-	self assert: app chats size equals: 1
+	self assert: app chats isEmpty
 ]
 
 { #category : 'running' }
