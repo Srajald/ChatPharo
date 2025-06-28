@@ -29,7 +29,7 @@ ChatPharoTest >> tearDown [
 { #category : 'running' }
 ChatPharoTest >> testAddNewChat [
 	app newChat.
-	self assert: app chats size equals: 2.
+	self assert: app chats size equals: 1.
 ]
 
 { #category : 'running' }
@@ -40,9 +40,9 @@ ChatPharoTest >> testInitializeStartsEmpty [
 
 { #category : 'running' }
 ChatPharoTest >> testNewChat [
-	self assert: app chats isEmpty
+	self assert: app chats isEmpty.
 	app newChat.
-	self assert: app chats size equals: 2.
+	self assert: app chats size equals: 1.
 	self assert: (app chats anyOne isKindOf: ChatPharoChat).
 ]
 
@@ -50,7 +50,7 @@ ChatPharoTest >> testNewChat [
 ChatPharoTest >> testNewChatAddsChatWithMockApi [
 
 	app newChat.
-	self assert: app chats size equals: 2.
+	self assert: app chats size equals: 1.
 	self
 		assert: (app chats first instVarNamed: #agent)
 		equals: mockApi
