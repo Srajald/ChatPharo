@@ -93,7 +93,3 @@ ChatPharoTest >> testUseModel [
 	self assert: settings agent model equals: 'TestModel'.
 ]
 
-{ #category : 'running' }
-ChatPharoSettings class >> resetDefault [
-	Default := ChatPharoSettings new.
-]
