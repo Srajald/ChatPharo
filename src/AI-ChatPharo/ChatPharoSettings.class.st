@@ -22,6 +22,7 @@ Class {
 		'agent',
 		'browserExtensionEnabled',
 		'browserToolsEnabled',
+		'maximumIterations',
 		'hasSeenWelcome'
 	],
 	#classInstVars : [
@@ -40,25 +41,27 @@ ChatPharoSettings class >> default [
 
 { #category : 'accessing' }
 ChatPharoSettings class >> loadOrNew [
-        | path |
-        path := FileLocator imageDirectory / 'chatpharo-settings.ston'.
 
-        path exists ifFalse: [ ^ self new ].
+	| path |
+	path := FileLocator imageDirectory / 'chatpharo-settings.ston'.
 
-        ^ path readStreamDo: [ :file |
-                [
-                        | settings |
-                        settings := STON fromStream: file.
-                        settings browserExtensionEnabled ifNil: [
-                                settings browserExtensionEnabled: false ].
-                            settings browserToolsEnabled ifNil: [
-                        settings browserToolsEnabled: (ChatPharoBrowserEnvironment new tools collect: [ :t | t name ]) asOrderedCollection
-                    ].
-					settings hasSeenWelcome ifNil: [ settings hasSeenWelcome: false ].
-                        ^ settings ]
-                        on: Error
-                        do: [ ^ self new ]
-        ]
+	path exists ifFalse: [ ^ self new ].
+
+	^ path readStreamDo: [ :file |
+			  [
+				  | settings |
+				  settings := STON fromStream: file.
+				  settings browserExtensionEnabled ifNil: [
+					  settings browserExtensionEnabled: false ].
+				  settings browserToolsEnabled ifNil: [
+						  settings browserToolsEnabled:
+							  (ChatPharoBrowserEnvironment new tools collect: [ :t |
+								   t name ]) asOrderedCollection ].
+						settings maximumIterations ifNil: [ settings maximumIterations: 3 ].
+						settings hasSeenWelcome ifNil: [ settings hasSeenWelcome: false ].
+				  ^ settings ]
+				  on: Error
+				  do: [ ^ self new ] ]
 ]
 
 { #category : 'accessing' }
@@ -152,7 +155,8 @@ ChatPharoSettings >> enableBrowserTool: toolName [
 	(browserToolsEnabled includes: toolName) ifFalse: [
 		browserToolsEnabled add: toolName ].
 	self class setDefault: self.
-        self class saveDefault
+	self class saveDefault.
+maximumIterations := 3
 ]
 
 { #category : 'initialization' }
@@ -162,6 +166,20 @@ ChatPharoSettings >> initialize [
 	agent := ChatPharoNullAgent new.
 	browserExtensionEnabled := false.
 	 browserToolsEnabled := (ChatPharoBrowserEnvironment new tools collect: [ :t | t name ]) asOrderedCollection
+]
+
+{ #category : 'initialization' }
+ChatPharoSettings >> maximumIterations [ 
+
+        ^ maximumIterations
+]
+
+{ #category : 'initialization' }
+ChatPharoSettings >> maximumIterations: aNumber [
+
+        maximumIterations := aNumber.
+        self class setDefault: self.
+        self class saveDefault
 ]
 
 { #category : 'initialization' }
