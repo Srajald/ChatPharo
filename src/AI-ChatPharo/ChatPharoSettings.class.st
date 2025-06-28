@@ -43,6 +43,7 @@ ChatPharoSettings class >> default [
 ChatPharoSettings class >> loadOrNew [
 
 	| path |
+	
 	path := FileLocator imageDirectory / 'chatpharo-settings.ston'.
 
 	path exists ifFalse: [ ^ self new ].
@@ -57,7 +58,7 @@ ChatPharoSettings class >> loadOrNew [
 						  settings browserToolsEnabled:
 							  (ChatPharoBrowserEnvironment new tools collect: [ :t |
 								   t name ]) asOrderedCollection ].
-						settings maximumIterations ifNil: [ settings maximumIterations: 3 ].
+              settings maximumIterations.
 						settings hasSeenWelcome ifNil: [ settings hasSeenWelcome: false ].
 				  ^ settings ]
 				  on: Error
@@ -165,7 +166,9 @@ ChatPharoSettings >> initialize [
 	super initialize.
 	agent := ChatPharoNullAgent new.
 	browserExtensionEnabled := false.
-	 browserToolsEnabled := (ChatPharoBrowserEnvironment new tools collect: [ :t | t name ]) asOrderedCollection
+	 browserToolsEnabled := (ChatPharoBrowserEnvironment new tools collect: [ :t | t name ]) asOrderedCollection.
+	maximumIterations := 3.
+
 ]
 
 { #category : 'initialization' }
