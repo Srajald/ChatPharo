@@ -14,9 +14,9 @@ Class {
 ChatPharoTest >> setUp [
 
 	super setUp.
+	ChatPharoSettings default hasSeenWelcome: true.
 	app := ChatPharo new.
 	mockApi := ChatPharoMockAgent new.
-	app settings hasSeenWelcome: true.
 	app settings instVarNamed: #agent put: mockApi
 ]
 
@@ -91,4 +91,9 @@ ChatPharoTest >> testUseModel [
 	settings := ChatPharoSettings new.
 	settings useModel: 'TestModel'.
 	self assert: settings agent model equals: 'TestModel'.
+]
+
+{ #category : 'running' }
+ChatPharoSettings class >> resetDefault [
+	Default := ChatPharoSettings new.
 ]
