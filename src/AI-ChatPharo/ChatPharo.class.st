@@ -115,7 +115,6 @@ ChatPharo >> runWelcomeMessageOnce [
 	welcomeChat agent: welcomeAgent.
 
 	chats add: welcomeChat.
-	welcomeChat sendMessage: ''.
 
 	settings hasSeenWelcome: true.
 ]
