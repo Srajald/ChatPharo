@@ -9,7 +9,7 @@ Class {
 { #category : 'initialization' }
 ChatPharoWelcomeAgent >> initialize [
 	super initialize.
-	self systemPrompt: 'Hi, I am Pharo — your assistant!';
+	self systemPrompt: 'Hi, I am Pharo — your assistant!'.
 	self response: ''.
 ]
 
