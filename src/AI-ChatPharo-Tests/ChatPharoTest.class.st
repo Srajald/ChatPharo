@@ -35,7 +35,8 @@ ChatPharoTest >> testAddNewChat [
 { #category : 'running' }
 ChatPharoTest >> testInitializeStartsEmpty [
 
-	self assert: app chats isEmpty
+	self assert: app chats size equals: 1.
+	self assert: (app chats first agent isKindOf: ChatPharoWelcomeAgent).
 ]
 
 { #category : 'running' }
@@ -91,4 +92,3 @@ ChatPharoTest >> testUseModel [
 	settings useModel: 'TestModel'.
 	self assert: settings agent model equals: 'TestModel'.
 ]
-
