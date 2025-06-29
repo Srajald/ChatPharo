@@ -33,8 +33,10 @@ ChatPharoPresenterTest >> testAddChatIncrementsNotebookPage [
 { #category : 'running' }
 ChatPharoPresenterTest >> testAddNewChatAddsNotebookPage [ 
 
+    | initialCount |
+    initialCount := presenter notebook pages size.
     presenter addNewChat.
-    self assert: (presenter notebook pages size) equals: 1
+    self assert: presenter notebook pages size equals: initialCount + 1.
 ]
 
 { #category : 'running' }
