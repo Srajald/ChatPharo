@@ -139,43 +139,6 @@ toolbar add: (SpToolbarButtonPresenter new
              action: [ self updateConnectionStatusOnce ];
              yourself).
 
-	self layout: (
-		SpBoxLayout newVertical
-			add: toolbar expand: false;
-			add: notebook expand: true;
-			yourself
-	).
-
-	(model notNil and: [ model chats notNil ]) ifTrue: [
-		model chats doWithIndex: [ :chat :i |
-			| title icon page |
-			title := (chat agent isKindOf: ChatPharoWelcomeAgent)
-				ifTrue: [ 'Welcome' ]
-				ifFalse: [ 'Chat ', i asString ].
-
-			icon := (chat agent isKindOf: ChatPharoWelcomeAgent)
-				ifTrue: [ self iconNamed: #info ]
-				ifFalse: [ self iconNamed: #glamorousChat ].
-
-			page := SpNotebookPage new
-				title: title;
-				icon: icon;
-				content: [ chat presenter ];
-				yourself.
-
-			notebook addPage: page.
-		].
-	].
-
-	(model notNil and: [ model settings hasSeenWelcome not and: [ model chats notEmpty ] ]) ifTrue: [
-		| welcomeChat |
-		welcomeChat := model chats first.
-		(welcomeChat agent isKindOf: ChatPharoWelcomeAgent) ifTrue: [
-			welcomeChat sendMessage: ''.
-			model settings hasSeenWelcome: true.
-		]
-	].
-
 	self updateConnectionStatus.
 ]
 
