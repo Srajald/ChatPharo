@@ -36,11 +36,11 @@ ChatPharoWelcomeAgent >> getResponseForPrompt: prompt [
 
 	self response: '👋 Welcome to ChatPharo! I can help you with:
 
-- 💬 Starting a new chat session
-- 📊 Asking or answering questions
-- 📚 Summarizing and explaining code
-- 🤖 Talking to different AI agents
-- ⚙️ Switching models or API settings
+- Starting a new chat session
+- Asking or answering questions
+- Summarizing and explaining code
+- Talking to different AI agents
+- Switching models or API settings
 
 How can I assist you today?'.
 
