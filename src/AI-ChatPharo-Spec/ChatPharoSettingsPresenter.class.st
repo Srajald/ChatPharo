@@ -14,7 +14,9 @@ Class {
 		'systemPromptInput',
 		'browserExtensionCheckBox',
 		'browserExtensionPage',
-		'maxIterationsInput'
+		'maxIterationsInput',
+		'playgroundToolCheckBox',
+		'browserAutoTabCheckBox'
 	],
 	#category : 'AI-ChatPharo-Spec-Core',
 	#package : 'AI-ChatPharo-Spec',
@@ -51,21 +53,43 @@ ChatPharoSettingsPresenter >> connectPresenters [
 			systemPromptInput text: model agent systemPrompt ].
 
 	"Bind text inputs to model"
-	systemPromptInput whenSubmitDo: [ :text |
+	systemPromptInput whenTextChangedDo: [ :text |
 			(ChatPharoSafetyAdvisor confirmPromptModificationOn: self)
 				ifTrue: [
 						model agent systemPrompt: text.
 						ChatPharoSettings setDefault: model.
 						ChatPharoSettings saveDefault ]
 				ifFalse: [ systemPromptInput text: model agent systemPrompt ] ].
-			
-        maxIterationsInput whenTextChangedDo: [ :t |
-					t ifNotEmpty: [  model maximumIterations: t asNumber ] ].
+
+	maxIterationsInput whenTextChangedDo: [ :t |
+			t ifNotEmpty: [
+					| num |
+					num := t asNumber.
+					num < 1
+						ifTrue: [
+								(ChatPharoSafetyAdvisor confirmMaxIterationsOn: self)
+									ifTrue: [
+											model maximumIterations: 1.
+											maxIterationsInput text: '1' ]
+									ifFalse: [
+									maxIterationsInput text: model maximumIterations asString ] ]
+						ifFalse: [ model maximumIterations: num ] ] ].
 
 	"Bind checkbox state to model"
 	browserExtensionCheckBox whenChangedDo: [ :presenter |
 			model browserExtensionEnabled: presenter.
-			self updateBrowserExtensionTab ]
+			self updateBrowserExtensionTab ].
+		
+        browserAutoTabCheckBox whenChangedDo: [ :presenter |
+                        model browserAutoTabEnabled: presenter ].
+
+	playgroundToolCheckBox whenChangedDo: [ :checked |
+			checked
+				ifTrue: [ model enableBrowserTool: 'open_playground' ]
+				ifFalse: [
+						(ChatPharoSafetyAdvisor confirmToolDisableOn: self)
+							ifTrue: [ model disableBrowserTool: 'open_playground' ]
+							ifFalse: [ playgroundToolCheckBox state: true ] ] ]
 ]
 
 { #category : 'layout' }
@@ -133,7 +157,7 @@ ChatPharoSettingsPresenter >> initializePresenters [
 		                       items: model models;
 		                       display: [ :e | e ];
 		                       yourself.
-		
+
 	systemPromptInput := self newTextInput
 		                     placeholder: 'System prompt...';
 		                     text: model agent systemPrompt;
@@ -149,6 +173,18 @@ ChatPharoSettingsPresenter >> initializePresenters [
 		                            label: 'Enable browser tab';
 		                            state: model browserExtensionEnabled;
 		                            yourself.
+		
+	browserAutoTabCheckBox := self newCheckBox
+		                          label: 'Open tab on selection';
+		                          state: model browserAutoTabEnabled;
+		                          yourself.
+		
+	playgroundToolCheckBox := self newCheckBox
+		                          label: 'Enable open playground tool';
+		                          state:
+			                          (model browserToolsEnabled includes:
+					                           'open_playground');
+		                          yourself.
 
 	apiDropList selectItem: (model availableApiChoices
 			 detect: [ :assoc | assoc value = model agent class ]
@@ -185,9 +221,10 @@ ChatPharoSettingsPresenter >> newChatTab [
 						    add: maxIterationsInput;
 						    yourself)
 				   expand: false;
+								add: playgroundToolCheckBox expand: false;
 				   yourself);
 		  yourself;
-			  yourself
+		  yourself
 ]
 
 { #category : 'initialization' }
@@ -211,6 +248,7 @@ ChatPharoSettingsPresenter >> newExtensionsTab [
 	^ SpPresenter new
 		  layout: (SpBoxLayout newTopToBottom
 				   add: browserExtensionCheckBox expand: false;
+				add: browserAutoTabCheckBox expand: false;
 				   yourself);
 		  yourself
 ]
