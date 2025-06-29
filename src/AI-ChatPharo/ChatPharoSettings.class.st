@@ -23,7 +23,8 @@ Class {
 		'browserExtensionEnabled',
 		'browserToolsEnabled',
 		'maximumIterations',
-		'hasSeenWelcome'
+		'browserAutoTabEnabled',
+    'hasSeenWelcome'
 	],
 	#classInstVars : [
 		'Default'
@@ -43,7 +44,6 @@ ChatPharoSettings class >> default [
 ChatPharoSettings class >> loadOrNew [
 
 	| path |
-	
 	path := FileLocator imageDirectory / 'chatpharo-settings.ston'.
 
 	path exists ifFalse: [ ^ self new ].
@@ -54,11 +54,13 @@ ChatPharoSettings class >> loadOrNew [
 				  settings := STON fromStream: file.
 				  settings browserExtensionEnabled ifNil: [
 					  settings browserExtensionEnabled: false ].
+			settings browserAutoTabEnabled ifNil: [
+                                          settings browserAutoTabEnabled: true ].
 				  settings browserToolsEnabled ifNil: [
 						  settings browserToolsEnabled:
 							  (ChatPharoBrowserEnvironment new tools collect: [ :t |
 								   t name ]) asOrderedCollection ].
-              settings maximumIterations.
+            settings maximumIterations.
 						settings hasSeenWelcome ifNil: [ settings hasSeenWelcome: false ].
 				  ^ settings ]
 				  on: Error
@@ -110,8 +112,21 @@ ChatPharoSettings >> availableApis [
 	^ {
 		  ChatPharoNullAgent.
 		  ChatPharoOllamaAgent.
-		ChatPharoMistralAgent.
 		  ChatPharoGeminiAgent }
+]
+
+{ #category : 'initialization' }
+ChatPharoSettings >> browserAutoTabEnabled [ 
+
+        ^ browserAutoTabEnabled
+]
+
+{ #category : 'initialization' }
+ChatPharoSettings >> browserAutoTabEnabled: aBoolean [
+
+        browserAutoTabEnabled := aBoolean.
+        self class setDefault: self.
+        self class saveDefault
 ]
 
 { #category : 'initialization' }
@@ -166,9 +181,11 @@ ChatPharoSettings >> initialize [
 	super initialize.
 	agent := ChatPharoNullAgent new.
 	browserExtensionEnabled := false.
-	 browserToolsEnabled := (ChatPharoBrowserEnvironment new tools collect: [ :t | t name ]) asOrderedCollection.
-	maximumIterations := 3.
-
+	browserAutoTabEnabled := true.
+	browserToolsEnabled := (ChatPharoBrowserEnvironment new tools
+		                        collect: [ :t | t name ])
+		                       asOrderedCollection.
+	maximumIterations := 3
 ]
 
 { #category : 'initialization' }
@@ -180,9 +197,9 @@ ChatPharoSettings >> maximumIterations [
 { #category : 'initialization' }
 ChatPharoSettings >> maximumIterations: aNumber [
 
-        maximumIterations := aNumber.
-        self class setDefault: self.
-        self class saveDefault
+	maximumIterations := aNumber max: 1.
+	self class setDefault: self.
+	self class saveDefault
 ]
 
 { #category : 'initialization' }
