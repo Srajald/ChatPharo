@@ -106,13 +106,19 @@ ChatPharo >> settings [
 
 { #category : 'initialization' }
 ChatPharo >> runWelcomeMessageOnce [
-	| welcomeChat welcomeAgent |
+	| welcomeChat welcomeAgent welcomePrompt welcomeReply |
 
 	settings hasSeenWelcome ifTrue: [ ^ self ].
+
 	welcomeAgent := ChatPharoWelcomeAgent new.
+	welcomePrompt := 'Hello'.
+	welcomeReply := welcomeAgent getResponseForPrompt: welcomePrompt.
 
 	welcomeChat := ChatPharoChat new.
 	welcomeChat agent: welcomeAgent.
+
+	welcomeChat addUserMessage: welcomePrompt.
+	welcomeChat addAssistantMessage: welcomeReply.
 
 	chats add: welcomeChat.
 
