@@ -139,16 +139,18 @@ toolbar add: (SpToolbarButtonPresenter new
              action: [ self updateConnectionStatusOnce ];
              yourself).
 
-	model chats isEmpty ifFalse: [
+	(model isNil or: [ model chats isEmpty ]) ifFalse: [
 		| firstChat welcomePage |
 		firstChat := model chats first presenter.
-		welcomePage := SpNotebookPage
+		welcomePage := SpNotebookPage new
 			title: 'Welcome';
 			icon: (self iconNamed: #glamorousInfo);
-			action: [ firstChat ].
+			presenter: firstChat;
+			yourself.
 		notebook addPage: welcomePage.
 		notebook selectPage: welcomePage.
 	].
+
 	self updateConnectionStatus.
 ]
 
