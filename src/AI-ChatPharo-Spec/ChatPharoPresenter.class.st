@@ -142,11 +142,10 @@ toolbar add: (SpToolbarButtonPresenter new
 	(model isNil or: [ model chats isEmpty ]) ifFalse: [
 		| firstChat welcomePage |
 		firstChat := model chats first presenter.
-		welcomePage := SpNotebookPage new
-			title: 'Welcome';
-			icon: (self iconNamed: #glamorousInfo);
-			presenter: firstChat;
-			yourself.
+		welcomePage := SpNotebookPage
+			title: 'Welcome'
+			icon: (self iconNamed: #glamorousInfo)
+			provider: [ firstChat ].
 		notebook addPage: welcomePage.
 		notebook selectPage: welcomePage.
 	].
