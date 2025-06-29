@@ -146,25 +146,28 @@ toolbar add: (SpToolbarButtonPresenter new
 			yourself
 	).
 
-	model chats doWithIndex: [ :chat :i |
-		| title icon page |
-		title := (chat agent isKindOf: ChatPharoWelcomeAgent)
-			ifTrue: [ 'Welcome' ]
-			ifFalse: [ 'Chat ', i asString ].
+	(model notNil and: [ model chats notNil ]) ifTrue: [
+		model chats doWithIndex: [ :chat :i |
+			| title icon page |
+			title := (chat agent isKindOf: ChatPharoWelcomeAgent)
+				ifTrue: [ 'Welcome' ]
+				ifFalse: [ 'Chat ', i asString ].
 
-		icon := (chat agent isKindOf: ChatPharoWelcomeAgent)
-			ifTrue: [ self iconNamed: #info ]
-			ifFalse: [ self iconNamed: #glamorousChat ].
+			icon := (chat agent isKindOf: ChatPharoWelcomeAgent)
+				ifTrue: [ self iconNamed: #info ]
+				ifFalse: [ self iconNamed: #glamorousChat ].
 
-		page := SpNotebookPage
-			title: title;
-			icon: icon;
-			provider: [ chat presenter ].
+			page := SpNotebookPage new
+				title: title;
+				icon: icon;
+				provider: [ chat presenter ];
+				yourself.
 
-		notebook addPage: page.
+			notebook addPage: page.
+		].
 	].
 
-	(model settings hasSeenWelcome not and: [ model chats notEmpty ]) ifTrue: [
+	(model notNil and: [ model settings hasSeenWelcome not and: [ model chats notEmpty ] ]) ifTrue: [
 		| welcomeChat |
 		welcomeChat := model chats first.
 		(welcomeChat agent isKindOf: ChatPharoWelcomeAgent) ifTrue: [
