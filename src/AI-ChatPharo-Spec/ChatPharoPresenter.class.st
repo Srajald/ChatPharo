@@ -160,7 +160,7 @@ toolbar add: (SpToolbarButtonPresenter new
 			page := SpNotebookPage new
 				title: title;
 				icon: icon;
-				provider: [ chat presenter ];
+				content: [ chat presenter ];
 				yourself.
 
 			notebook addPage: page.
