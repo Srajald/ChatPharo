@@ -35,6 +35,15 @@ ChatPharoSettingsTest >> testAvailableApiChoicesReturnsAssociations [
 ]
 
 { #category : 'tests' }
+ChatPharoSettingsTest >> testBrowserAutoTabAccessor [
+
+    self assert: settings browserAutoTabEnabled.
+    settings browserAutoTabEnabled: false.
+    self deny: settings browserAutoTabEnabled
+
+]
+
+{ #category : 'tests' }
 ChatPharoSettingsTest >> testBrowserToolsEnabledDefault [ 
         self deny: settings browserToolsEnabled isNil.
         self assert: settings browserToolsEnabled notEmpty
@@ -56,6 +65,16 @@ ChatPharoSettingsTest >> testMaximumIterationsAccessor [
 
     settings maximumIterations: 8.
     self assert: settings maximumIterations equals: 8
+]
+
+{ #category : 'tests' }
+ChatPharoSettingsTest >> testMaximumIterationsLowerBound [ 
+
+    settings maximumIterations: 0.
+    self assert: settings maximumIterations equals: 1.
+
+    settings maximumIterations: -3.
+    self assert: settings maximumIterations equals: 1
 ]
 
 { #category : 'tests' }
