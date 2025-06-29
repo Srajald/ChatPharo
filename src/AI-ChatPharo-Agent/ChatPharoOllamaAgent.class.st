@@ -72,6 +72,7 @@ ChatPharoOllamaAgent class >> isReachable [
 
 { #category : 'api' }
 ChatPharoOllamaAgent class >> isValidModel: aModelName [ 
+    
     self isReachable ifFalse: [ ^ false ].
 
     ^ [ 
@@ -82,7 +83,7 @@ ChatPharoOllamaAgent class >> isValidModel: aModelName [
             post;
             yourself.
         true 
-    ] on: ZnHttpUnsuccessful, NetworkError do: [ false ].
+    ] on: ZnHttpUnsuccessful, NetworkError do: [ false ]
 ]
 
 { #category : 'api' }
