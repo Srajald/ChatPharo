@@ -39,7 +39,7 @@ ChatPharoOllamaAgent class >> deleteModel: aModelName [
         | client response json status |
         client := ZnClient new
             url: 'http://' , self defaultHost , ':' , self defaultPort , '/api/delete';
-            entity: (ZnEntity with: (STONJSON toString: { (#name -> aModelName) } asDictionary));
+            entity: (ZnEntity with: (STONJSON toString: { (#model -> aModelName) } asDictionary));
             contentType: 'application/json';
             method: 'DELETE'. 
 
