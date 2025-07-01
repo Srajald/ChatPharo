@@ -148,16 +148,23 @@ ChatPharoOllamaSettingsPresenter >> initializePresenters [
 								                 'Model ' , installInput text , ' not found.' ] ];
 		                 yourself.
 	deleteButton := self newButton
-						label: 'Delete';
-		                icon: (self iconNamed: #delete);
-		                action: [
-						(model class isValidModel: installInput text)
-							ifTrue: [
-								model class deleteModel: installInput text.
-								self refreshModels ]
-							ifFalse: [
-								self inform: 'Model ' , installInput text , ' not found.' ] ];
-		                yourself.
+					label: 'Delete';
+					icon: (self iconNamed: #delete);
+					action: [
+						| modelToDelete |
+						modelToDelete := installInput text trim.
+						modelToDelete ifEmpty: [
+							self inform: 'Please enter a model name to delete.'
+						] ifNotEmpty: [
+							(UIManager default confirm: 'Are you sure you want to delete model ', modelToDelete, '?')
+								ifTrue: [
+									model class deleteModel: modelToDelete.
+									self refreshModels.
+									installInput text: ''.
+								].
+						].
+					];
+					yourself.
 	        testButton := self newButton
                                label: 'Test Connection';
                                icon: (self iconNamed: #glamorousGo);
