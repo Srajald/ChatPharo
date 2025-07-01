@@ -148,7 +148,7 @@ ChatPharoOllamaSettingsPresenter >> initializePresenters [
 								                 'Model ' , installInput text , ' not found.' ] ];
 		                 yourself.
 	deleteButton := self newButton
-						label: 'Delete';Add commentMore actions
+						label: 'Delete';
 		                icon: (self iconNamed: #delete);
 		                action: [
 						(model class isValidModel: installInput text)
