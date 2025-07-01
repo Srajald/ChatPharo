@@ -158,9 +158,15 @@ ChatPharoOllamaSettingsPresenter >> initializePresenters [
 						] ifNotEmpty: [
 							(UIManager default confirm: 'Are you sure you want to delete model ', modelToDelete, '?')
 								ifTrue: [
-									model class deleteModel: modelToDelete.
-									self refreshModels.
-									installInput text: ''.
+									[
+										model class deleteModel: modelToDelete.
+										self refreshModels.
+										installInput text: ''.
+										self inform: 'Model ', modelToDelete, ' deleted successfully.'
+									] on: Error do: [ :ex |
+										self inform: 'Failed to delete model: ', ex messageText.
+										Transcript show: 'Delete error: ', ex messageText; cr.
+									].
 								].
 						].
 					];
