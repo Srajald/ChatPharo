@@ -169,6 +169,7 @@ ChatPharoPresenter >> openSettings [
 
 	| settingsWindow |
 	settingsWindow := model settings presenter.
+	settingsWindow chatPharo: model.
 	settingsWindow open
 ]
 
@@ -222,7 +223,7 @@ ChatPharoPresenter >> updateConnectionStatus [
 ChatPharoPresenter >> updateConnectionStatusOnce [
 
 	| agent statusText |
-	agent := model activeAgent.
+	agent := model activeAgent ifNil: [ model settings agent ].
 
 	statusText := (agent notNil and: [ agent class isReachable ])
 		              ifTrue: [ 'Connected' ]
@@ -232,5 +233,6 @@ ChatPharoPresenter >> updateConnectionStatusOnce [
 		label: statusText;
 		help: (statusText = 'Connected'
 				 ifTrue: [ 'Connected to backend (e.g., Ollama)' ]
-				 ifFalse: [ 'No connection to backend' ]); enabled: false
+				 ifFalse: [ 'No connection to backend' ]);
+		enabled: false
 ]
