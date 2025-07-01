@@ -152,10 +152,10 @@ ChatPharoOllamaSettingsPresenter >> initializePresenters [
 					icon: (self iconNamed: #delete);
 					action: [
 						| modelToDelete result |
-						modelToDelete := installInput text trim.
-						modelToDelete ifEmpty: [
-							self inform: 'Please enter a model name to delete.'
-						] ifNotEmpty: [
+						modelToDelete := modelsDrop selectedItem.
+						modelToDelete ifNil: [
+							self inform: 'Please select a model to delete from the list.'
+						] ifNotNil: [
 							(UIManager default confirm: 'Are you sure you want to delete model ', modelToDelete, '?')
 								ifTrue: [
 									[
