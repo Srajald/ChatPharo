@@ -55,7 +55,7 @@ ChatPharoOllamaSettingsPresenter >> defaultLayout [
 		              expand: false;
 		              add: installInput expand: true;
 		              add: installButton expand: false;
-		              "add: deleteButton expand: false;"
+		              add: deleteButton expand: false;
 		              yourself.
 
 	hostRow := SpBoxLayout newHorizontal
