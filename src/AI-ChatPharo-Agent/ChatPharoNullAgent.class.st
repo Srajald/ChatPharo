@@ -21,7 +21,7 @@ ChatPharoNullAgent class >> displayName [
 { #category : 'api' }
 ChatPharoNullAgent class >> isReachable [
 
-	^ false
+	^ true 
 ]
 
 { #category : 'api' }

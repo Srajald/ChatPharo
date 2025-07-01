@@ -22,9 +22,9 @@ ChatPharoNullAgentTest >> testGetResponseForPromptReturnsWarning [
 ]
 
 { #category : 'tests' }
-ChatPharoNullAgentTest >> testIsAlwaysReachable [
-    self deny: ChatPharoNullAgent isReachable
+ChatPharoNullAgentTest >> testIsAlwaysReachable [ 
 
+    self assert: ChatPharoNullAgent isReachable
 ]
 
 { #category : 'tests' }

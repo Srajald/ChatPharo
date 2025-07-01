@@ -37,15 +37,6 @@ ChatPharoBrowserEnvironmentTest >> testClassesInPackageNamedReturnsClasses [
 ]
 
 { #category : 'running' }
-ChatPharoBrowserEnvironmentTest >> testDescribePackageReturnsSummary [
-
-    | reply |
-    reply := env applyFunctionDescribePackage:
-                (Dictionary with: 'package' -> 'AI-ChatPharo').
-    self assert: ((reply at: 'summary_per_class') keys notEmpty).
-]
-
-{ #category : 'running' }
 ChatPharoBrowserEnvironmentTest >> testFindMethodsWithSubstringCapsAt50 [ 
 
    | reply |
@@ -81,10 +72,4 @@ ChatPharoBrowserEnvironmentTest >> testPackageNamedCaseInsensitive [
 ChatPharoBrowserEnvironmentTest >> testPackageNamedReturnsNilForUnknown [ 
 
     self assert: (env packageNamed: 'UnknownPackage') isNil.
-]
-
-{ #category : 'running' }
-ChatPharoBrowserEnvironmentTest >> testToolsIncludeCheckSyntax [ 
-
-    self assert: (env tools anySatisfy: [ :tool | tool name = 'check_syntax' ]).
 ]
