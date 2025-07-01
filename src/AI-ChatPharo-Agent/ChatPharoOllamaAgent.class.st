@@ -45,7 +45,7 @@ ChatPharoOllamaAgent class >> deleteModel: aModelName [
 			  entity: (ZnEntity with:
 						   (STONJSON toString: { (#model -> aModelName) } asDictionary));
 			  contentType: 'application/json';
-			  delete;
+			  post;
 			  yourself.
 		  true ]
 		  on: ZnHttpUnsuccessful , NetworkError
