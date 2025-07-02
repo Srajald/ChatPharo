@@ -86,18 +86,19 @@ ChatPharoPresenter >> initializePresenters [
 
 	notebook := self newNotebook.
 
-	notebook widget whenMouseDown: [:event |
-		(event isDoubleClick and: [event target isNotebookTab]) ifTrue: [
-			| clickedPage chat newTitle |
-			clickedPage := notebook selectedPage.
-			chat := clickedPage propertyAt: #chat ifAbsent: [ ^ self ].
-			newTitle := UIManager default
-				request: 'Rename chat title:' initialAnswer: chat title.
-			newTitle ifNotEmpty: [
-				chat title: newTitle.
-				clickedPage title: newTitle
-			].
-		].
+	notebook pageMenuProvider: [ :page | 
+		(SpMenuPresenter new)
+			add: 'Rename Chat' action: [
+				| chat newTitle |
+				chat := page propertyAt: #chat ifAbsent: [ ^ self ].
+				newTitle := UIManager default
+					request: 'Rename chat title:' initialAnswer: chat title.
+				newTitle ifNotEmpty: [
+					chat title: newTitle.
+					page title: newTitle
+				].
+			];
+			yourself
 	].
 
 	toolbar := self newToolbar.
