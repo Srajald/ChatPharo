@@ -199,22 +199,25 @@ ChatPharoOllamaAgent >> initialize [
 	host := self class defaultHost.
 	port := self class defaultPort.
 	temperature := 0.0.
+
+	self systemPrompt: self class defaultSystemPrompt.
+	self promptPrefix: ''.
+	packageName := ''
+
 	self model ifNil: [
 			| availableModels |
 			availableModels := self class modelNames.
 
 			availableModels isEmpty ifFalse: [
 				self model: availableModels first ] ].
-
-	self systemPrompt: self class defaultSystemPrompt.
-	self promptPrefix: ''.
-	packageName := ''
 ]
 
 { #category : 'accessing' }
 ChatPharoOllamaAgent >> isConfigured [ 
 
-        ^ host notEmpty and: [ port notEmpty and: [ model notEmpty ] ]
+    ^ (host notNil and: [ host notEmpty ])
+        and: (port notNil and: [ port notEmpty ])
+        and: (model notNil and: [ model notEmpty ]).
 ]
 
 { #category : 'initialization' }
