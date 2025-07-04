@@ -13,7 +13,8 @@ Class {
 		'host',
 		'port',
 		'temperature',
-		'packageName'
+		'packageName',
+		'model'
 	],
 	#category : 'AI-ChatPharo-Agent',
 	#package : 'AI-ChatPharo-Agent'
@@ -200,7 +201,7 @@ ChatPharoOllamaAgent >> initialize [
 	port := self class defaultPort.
 	temperature := 0.0.
 
-	self model := ''.
+	self model: ''.
 
 	self systemPrompt: self class defaultSystemPrompt.
 	self promptPrefix: ''.
@@ -214,6 +215,16 @@ ChatPharoOllamaAgent >> isConfigured [
     ^ (host notNil and: [ host notEmpty ])
         and: (port notNil and: [ port notEmpty ])
         and: (model notNil and: [ model notEmpty ]).
+]
+
+{ #category : 'accessing' }
+ChatPharoOllamaAgent >> model [
+    ^ model
+]
+
+{ #category : 'accessing' }
+ChatPharoOllamaAgent >> model: aModel [
+    model := aModel
 ]
 
 { #category : 'initialization' }
