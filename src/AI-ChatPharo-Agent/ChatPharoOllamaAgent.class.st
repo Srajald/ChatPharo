@@ -13,8 +13,7 @@ Class {
 		'host',
 		'port',
 		'temperature',
-		'packageName',
-		'model'
+		'packageName'
 	],
 	#category : 'AI-ChatPharo-Agent',
 	#package : 'AI-ChatPharo-Agent'
@@ -151,16 +150,6 @@ ChatPharoOllamaAgent class >> validateModel: aModelName [
 
     (self isValidModel: aModelName) ifFalse: [
         ^ self error: 'Invalid model name or model does not exist on Ollama server' ].
-]
-
-{ #category : 'accessing' }
-ChatPharoOllamaAgent >> model [
-    ^ model
-]
-
-{ #category : 'accessing' }
-ChatPharoOllamaAgent >> model: aModel [
-    model := aModel
 ]
 
 { #category : 'accessing' }
