@@ -13,8 +13,7 @@ Class {
 		'host',
 		'port',
 		'temperature',
-		'packageName',
-		'model'
+		'packageName'
 	],
 	#category : 'AI-ChatPharo-Agent',
 	#package : 'AI-ChatPharo-Agent'
@@ -154,16 +153,6 @@ ChatPharoOllamaAgent class >> validateModel: aModelName [
 ]
 
 { #category : 'accessing' }
-ChatPharoOllamaAgent >> model [
-    ^ model
-]
-
-{ #category : 'accessing' }
-ChatPharoOllamaAgent >> model: aModel [
-    model := aModel
-]
-
-{ #category : 'accessing' }
 ChatPharoOllamaAgent >> configurationErrorMessage [
 
 	^ 'Please complete all required fields.'
@@ -211,16 +200,12 @@ ChatPharoOllamaAgent >> initialize [
 	port := self class defaultPort.
 	temperature := 0.0.
 
+	self model := ''.
+
 	self systemPrompt: self class defaultSystemPrompt.
 	self promptPrefix: ''.
 	packageName := ''
 
-	self model ifNil: [
-			| availableModels |
-			availableModels := self class modelNames.
-
-			availableModels isEmpty ifFalse: [
-				self model: availableModels first ] ].
 ]
 
 { #category : 'accessing' }
