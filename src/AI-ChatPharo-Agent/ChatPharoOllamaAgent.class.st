@@ -200,16 +200,12 @@ ChatPharoOllamaAgent >> initialize [
 	port := self class defaultPort.
 	temperature := 0.0.
 
+	self model := ''.
+
 	self systemPrompt: self class defaultSystemPrompt.
 	self promptPrefix: ''.
 	packageName := ''
 
-	self model ifNil: [
-			| availableModels |
-			availableModels := self class modelNames.
-
-			availableModels isEmpty ifFalse: [
-				self model: availableModels first ] ].
 ]
 
 { #category : 'accessing' }
