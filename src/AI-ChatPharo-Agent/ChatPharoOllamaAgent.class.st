@@ -36,7 +36,7 @@ ChatPharoOllamaAgent class >> deleteModel: aModelName [
     self isReachable ifFalse: [ ^ false ].
 
     ^ [
-        | client response url |
+        | client response json status url |
         url := 'http://' , self defaultHost , ':' , self defaultPort , '/api/delete?model=' , aModelName.
 
         client := ZnClient new
@@ -44,8 +44,10 @@ ChatPharoOllamaAgent class >> deleteModel: aModelName [
             method: 'DELETE'.
 
         response := client execute.
-        response isSuccess
-    ] on: ZnHttpUnsuccessful , NetworkError do: [ false ].
+        json := STONJSON fromString: response contents.
+        status := json at: 'status' ifAbsent: [ '' ].
+        status = 'success'
+    ] on: ZnHttpUnsuccessful , NetworkError , Error do: [ false ].
 ]
 
 { #category : 'api' }
