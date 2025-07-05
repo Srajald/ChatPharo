@@ -212,9 +212,7 @@ ChatPharoOllamaAgent >> initialize [
 { #category : 'accessing' }
 ChatPharoOllamaAgent >> isConfigured [ 
 
-    ^ (host notNil and: [ host notEmpty ])
-        and: (port notNil and: [ port notEmpty ])
-        and: (model notNil and: [ model notEmpty ]).
+	^ host notEmpty and: [ port notEmpty and: [ model notEmpty ] ]
 ]
 
 { #category : 'accessing' }
