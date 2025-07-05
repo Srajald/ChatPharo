@@ -36,12 +36,12 @@ ChatPharoOllamaAgent class >> deleteModel: aModelName [
     self isReachable ifFalse: [ ^ false ].
 
     ^ [
-        | client response json status url |
-        url := 'http://' , self defaultHost , ':' , self defaultPort , '/api/delete?model=' , aModelName.
-
+        | client response json status |
         client := ZnClient new
-            url: url;
-            method: 'DELETE'.
+            url: 'http://' , self defaultHost , ':' , self defaultPort , '/api/delete';
+            entity: (ZnEntity with: (STONJSON toString: { 'name' -> aModelName } asDictionary));
+            contentType: 'application/json';
+            method: 'POST'.
 
         response := client execute.
         json := STONJSON fromString: response contents.
