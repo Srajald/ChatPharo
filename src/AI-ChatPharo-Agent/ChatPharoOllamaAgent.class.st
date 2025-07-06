@@ -51,8 +51,8 @@ ChatPharoOllamaAgent class >> deleteModel: aModelName [
 
         payload := STONJSON fromString: response contents.
 
-        "Ollama 0.1.30+ answers { "status":"success" }.
-         Older versions answer { "deleted":true }."
+        "Ollama 0.1.30+ responds with { 'status':'success' }.
+         Older versions reply with { 'deleted':true }."
         ((payload at: 'status' ifAbsent: [ nil ]) = 'success')
             ifTrue:  [ ^ true ].
 
