@@ -33,21 +33,34 @@ ChatPharoOllamaAgent class >> defaultPort [
 
 { #category : 'api' }
 ChatPharoOllamaAgent class >> deleteModel: aModelName [
+
     self isReachable ifFalse: [ ^ false ].
 
     ^ [
-        | client response json status |
+        | client response payload |
         client := ZnClient new
-            url: 'http://' , self defaultHost , ':' , self defaultPort , '/api/delete';
-            entity: (ZnEntity with: (STONJSON toString: { 'name' -> aModelName } asDictionary));
+            url: 'http://', self defaultHost, ':', self defaultPort, '/api/delete';
+            entity: (ZnEntity with:
+                          (STONJSON toString: { #name -> aModelName } asDictionary));
             contentType: 'application/json';
-            method: 'POST'.
+            post;
+            yourself.
 
         response := client execute.
-        json := STONJSON fromString: response contents.
-        status := json at: 'status' ifAbsent: [ '' ].
-        status = 'success'
-    ] on: ZnHttpUnsuccessful , NetworkError , Error do: [ false ].
+        response isSuccess ifFalse: [ ^ false ].
+
+        payload := STONJSON fromString: response contents.
+
+        "Ollama 0.1.30+ answers { "status":"success" }.
+         Older versions answer { "deleted":true }."
+        ((payload at: 'status' ifAbsent: [ nil ]) = 'success')
+            ifTrue:  [ ^ true ].
+
+        ((payload at: 'deleted' ifAbsent: [ false ]) = true)
+            ifTrue:  [ ^ true ].
+
+        false
+    ] on: ZnHttpUnsuccessful , NetworkError do: [ false ].
 ]
 
 { #category : 'api' }
