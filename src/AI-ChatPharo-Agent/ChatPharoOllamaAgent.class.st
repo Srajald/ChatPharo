@@ -43,18 +43,16 @@ ChatPharoOllamaAgent class >> deleteModel: aModelName [
             entity: (ZnEntity with:
                          (STONJSON toString: { #name -> aModelName } asDictionary));
             contentType: 'application/json';
-            post;
-            yourself.
+            method: 'POST'.              "← tell Zinc which HTTP verb to use"
 
-        "plainExecute returns a ZnResponse"
-        response := client plainExecute.
+        response := client execute.      "← one single request, ZnResponse"
 
         response isSuccess ifFalse: [ ^ false ].
 
         payload := STONJSON fromString: response contents.
 
-        "Ollama 0.1.30+ responds with { 'status':'success' }.
-         Older versions reply with { 'deleted':true }."
+        "Ollama ≥0.1.30 → { 'status':'success' }.
+         Older versions → { 'deleted':true }."
         ((payload at: 'status'  ifAbsent: [ nil ]) = 'success')
             ifTrue: [ ^ true ].
 
