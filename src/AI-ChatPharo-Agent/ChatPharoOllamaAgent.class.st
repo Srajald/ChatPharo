@@ -37,19 +37,25 @@ ChatPharoOllamaAgent class >> deleteModel: aModelName [
     self isReachable ifFalse: [ ^ false ].
 
     ^ [
-        | client |
+        | client responseText payload |
         client := ZnClient new
             url: 'http://', self defaultHost, ':', self defaultPort, '/api/delete';
-            method: #POST;                       
+            entity: (ZnEntity with:
+                         (STONJSON toString: { #name -> aModelName } asDictionary));
             contentType: 'application/json';
-            entity: (ZnEntity
-                        with: (STONJSON toString: { #name -> aModelName } asDictionary)).
+            method: 'POST'.
 
-        client execute.
+        "execute returns the response body as a ByteString"
+        responseText := client execute.
 
-        client response isSuccessful
+        payload := STONJSON fromString: responseText.
+
+        ((payload at: 'status'  ifAbsent: [ nil ]) = 'success'
+            or: [ (payload at: 'deleted' ifAbsent: [ false ]) = true ])
+            ifTrue:  [ true ]
+            ifFalse: [ false ]
     ] on: ZnHttpUnsuccessful , NetworkError do: [ false ].
-]
+]     
 
 { #category : 'api' }
 ChatPharoOllamaAgent class >> displayName [
