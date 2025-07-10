@@ -114,7 +114,7 @@ ChatPharoChatTest >> testEmptyMessageDoesNotCrash [
         (chat instVarNamed: #promptProcess) isTerminated
     ] whileFalse: [ (Delay forMilliseconds: 10) wait ].
 
-    self assert: (chat messages allSatisfy: [:msg | msg content isEmpty]).
+    self assert: ((chat messages select: [:msg | msg content notEmpty]) isEmpty).
 ]
 
 { #category : 'running' }
