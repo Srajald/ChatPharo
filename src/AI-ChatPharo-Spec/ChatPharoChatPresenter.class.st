@@ -85,8 +85,7 @@ ChatPharoChatPresenter >> initializePresenters [
 	scrollableMessages layout: messagesLayout.
 
 	model messages do: [ :message |
-        messagesLayout add: message presenter withConstraints: [ :constraints | 
-            constraints height: (message height) * 2 ].
+    messagesLayout add: (self buildMessageBubble: message content role: message assistantLabel).
     ].
 ]
 
