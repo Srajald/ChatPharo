@@ -114,7 +114,7 @@ ChatPharoChatTest >> testEmptyMessageDoesNotCrash [
         (chat instVarNamed: #promptProcess) isTerminated
     ] whileFalse: [ (Delay forMilliseconds: 10) wait ].
 
-    self assert: ((chat messages collect: [:msg | msg content notEmpty]) size) = 0. 
+    self assert: (chat messages allSatisfy: [:msg | msg content isEmpty]).
 ]
 
 { #category : 'running' }
@@ -130,7 +130,7 @@ ChatPharoChatTest >> testManyChatsRemainIsolated [
     [ chats allSatisfy: [:c | (c instVarNamed: #promptProcess) isTerminated ] ] whileFalse: [ (Delay forMilliseconds: 10) wait ].
 
     self assert: (chats allSatisfy: [:c | c messages size = 2]).
-    self assert: ((chats collect: [:c | c messages last answer]) asSet size) = 5.
+    self assert: ((chats collect: [:c | c messages last content]) asSet size) = 5.
 ]
 
 { #category : 'running' }
