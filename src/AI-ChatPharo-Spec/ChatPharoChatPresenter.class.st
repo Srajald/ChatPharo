@@ -82,7 +82,12 @@ ChatPharoChatPresenter >> initializePresenters [
 
 	messagesLayout := SpBoxLayout newVertical.
 	scrollableMessages := SpPresenter new.
-	scrollableMessages layout: messagesLayout
+	scrollableMessages layout: messagesLayout.
+
+	model messages do: [ :message |
+        messagesLayout add: message presenter withConstraints: [ :constraints | 
+            constraints height: (message height) * 2 ].
+    ].
 ]
 
 { #category : 'initialization' }
