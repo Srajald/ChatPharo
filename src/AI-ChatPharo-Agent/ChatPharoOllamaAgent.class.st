@@ -41,21 +41,21 @@ ChatPharoOllamaAgent class >> deleteModel: aModelName [
         client := ZnClient new
             url: 'http://', self defaultHost, ':', self defaultPort, '/api/delete';
             entity: (ZnEntity with:
-                         (STONJSON toString: { #name -> aModelName } asDictionary));
+                (STONJSON toString: { #model -> aModelName } asDictionary));
             contentType: 'application/json';
-            method: 'POST'.
+            method: 'DELETE'. 
 
-        "execute returns the response body as a ByteString"
         responseText := client execute.
+        Transcript show: 'DELETE response: ', responseText; cr.
 
         payload := STONJSON fromString: responseText.
 
-        ((payload at: 'status'  ifAbsent: [ nil ]) = 'success'
+        ((payload at: 'status' ifAbsent: [ nil ]) = 'success'
             or: [ (payload at: 'deleted' ifAbsent: [ false ]) = true ])
             ifTrue:  [ true ]
             ifFalse: [ false ]
     ] on: ZnHttpUnsuccessful , NetworkError do: [ false ].
-]     
+]
 
 { #category : 'api' }
 ChatPharoOllamaAgent class >> displayName [
