@@ -83,8 +83,18 @@ ChatPharoMethodBrowser >> generateTestMethodFor: aMethod [
 
 { #category : 'actions' }
 ChatPharoMethodBrowser >> generateTestMethodNamed: aSelector in: aClass withBody: methodBody [
-	| fullSource |
-	fullSource := aSelector asString , String cr , methodBody.
+	| indentedBody fullSource |
+	indentedBody := String streamContents: [ :stream |
+		(methodBody lines) do: [ :line |
+			stream
+				nextPutAll: '    ';
+				nextPutAll: line;
+				cr ] ].
+	fullSource := String streamContents: [ :s |
+		s
+			nextPutAll: aSelector asString;
+			cr;
+			nextPutAll: indentedBody ].
 	aClass compile: fullSource classified: 'tests'.
 ]
 
