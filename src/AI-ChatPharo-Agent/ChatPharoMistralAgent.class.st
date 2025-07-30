@@ -144,6 +144,11 @@ ChatPharoMistralAgent >> packageName: aString [
                          with: packageName)
 ]
 
+{ #category : 'api' }
+ChatPharoMistralAgent >> prompt: aString [
+	^ self getResponseForPrompt: aString
+]
+
 { #category : 'accessing' }
 ChatPharoMistralAgent >> temperature [
 
@@ -176,9 +181,4 @@ ChatPharoMistralAgent >> tools [
     available := ChatPharoBrowserEnvironment new tools.
     ^ available select: [ :tool |
         ChatPharoSettings default browserToolsEnabled includes: tool name ]
-]
-
-{ #category : 'api' }
-ChatPharoMistralAgent >> prompt: aString [
-	^ self getResponseForPrompt: aString
 ]
