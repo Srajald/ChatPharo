@@ -63,6 +63,13 @@ ChatPharoChatTest >> testCancelTwiceIsSafe [
     self assert: (chat instVarNamed: #promptProcess) isTerminated.
 ]
 
+{ #category : 'tests' }
+ChatPharoChatTest >> testClearCache [
+
+	self flag: #toImplement.
+	self assert: false
+]
+
 { #category : 'running' }
 ChatPharoChatTest >> testClearCacheForcesBackendCall [
 
