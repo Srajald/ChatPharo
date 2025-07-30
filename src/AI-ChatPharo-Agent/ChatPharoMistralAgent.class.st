@@ -144,11 +144,6 @@ ChatPharoMistralAgent >> packageName: aString [
                          with: packageName)
 ]
 
-{ #category : 'api' }
-ChatPharoMistralAgent >> prompt: aString [
-	^ self getResponseForPrompt: aString
-]
-
 { #category : 'accessing' }
 ChatPharoMistralAgent >> temperature [
 
