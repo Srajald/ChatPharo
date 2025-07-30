@@ -63,22 +63,25 @@ ChatPharoMethodBrowser >> updateAgentMethodName [
 { #category : 'actions' }
 ChatPharoMethodBrowser >> generateTestMethodFor: aMethod [
 
-	| testClass selector prompt response methodBody agent |
-	testClass := self findOrCreateTestClassFor: aMethod methodClass.
-	selector := self testSelectorFor: aMethod selector.
-	aMethod sourceCode ifNil: [ ^ self inform: 'Cannot generate test. Source code is unavailable.' ].
+    | testClass selector prompt response methodBody currentAgent |
+    testClass := self findOrCreateTestClassFor: aMethod methodClass.
+    selector := self testSelectorFor: aMethod selector.
+    aMethod sourceCode ifNil: [ ^ self inform: 'Cannot generate test. Source code is unavailable.' ].
 
-	(testClass includesSelector: selector)
-		ifTrue: [ ^ self inform: 'Test method already exists.' ].
+    (testClass includesSelector: selector)
+        ifTrue: [ ^ self inform: 'Test method already exists.' ].
 
-	prompt := 'Generate a test method in Smalltalk SUnit style for the following method. Only return the method body (without the method header):', String cr, aMethod sourceCode.
+    prompt := 'Generate a test method in Smalltalk SUnit style for the following method. Only return the method body (without the method header):', String cr, aMethod sourceCode.
 
-	agent := ChatPharoMistralAgent new.
-	response := agent prompt: prompt.
+    currentAgent := ChatPharoSettings default agent.
+    currentAgent := (currentAgent isKindOf: ChatPharoAgent)
+        ifTrue: [ currentAgent copyForChat ]
+        ifFalse: [ currentAgent ].
 
-	methodBody := response ifNil: [ 'self assert: false.' ].
+    response := currentAgent prompt: prompt.
+    methodBody := response ifNil: [ 'self assert: false.' ].
 
-	self generateTestMethodNamed: selector in: testClass withBody: methodBody.
+    self generateTestMethodNamed: selector in: testClass withBody: methodBody.
 ]
 
 { #category : 'actions' }
