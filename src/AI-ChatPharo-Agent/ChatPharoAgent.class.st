@@ -167,6 +167,11 @@ ChatPharoAgent >> promptPrefix: anObject [
 	promptPrefix := anObject
 ]
 
+{ #category : 'api' }
+ChatPharoAgent >> prompt: aPrompt [
+    ^ self getResponseForPrompt: aPrompt
+]
+
 { #category : 'accessing' }
 ChatPharoAgent >> response [
 
