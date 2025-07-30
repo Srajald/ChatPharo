@@ -108,39 +108,19 @@ ChatPharoMistralSettingsPresenter >> initializePresenters [
 		
 	modelDrop whenSelectedItemChangedDo: [ :m | model model: m ].
 	
-	temperatureInput := self newTextInput
-		                    placeholder: '0.0';
-		                    text: model temperature asString;
-		                    yourself.
-		
-	temperatureInput whenTextChangedDo: [ :text |
-        self handleTemperatureInput: text ].
+	temperatureInput := SpNumericInputPresenter new
+                     minimum: 0;
+                     maximum: 1;
+                     value: model temperature;
+                     yourself.
+
+    temperatureInput whenValueChangedDo: [ :v | model temperature: v ].
 
 	testButton := self newButton
 		              label: 'Test Connection';
 		              icon: (self iconNamed: #glamorousGo);
 		              action: [ self testConnection ];
 		              yourself
-]
-
-{ #category : 'private' }
-ChatPharoMistralSettingsPresenter >> handleTemperatureInput: text [
-
-    | value |
-	text isEmpty
-        ifTrue: [  "User is deleting / still typing – nothing to do."
-                  ^ self ].
-
-    [ value := text asFloat ]
-        on: Error
-        do: [ self inform: 'Temperature must be a number'.
-              ^ self ].
-
-    (value < 0.0 or: [ value > 1.0 ])
-        ifTrue: [ self inform: 'Temperature must be between 0.0 and 1.0'.
-                  ^ self ].
-
-    model temperature: value
 ]
 
 { #category : 'accessing' }
