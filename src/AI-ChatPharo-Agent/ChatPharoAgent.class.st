@@ -86,7 +86,7 @@ ChatPharoAgent >> configurationErrorMessage [
 ChatPharoAgent >> copyForChat [ 
 
     | clone |
-    clone := self copy.
+    clone := self veryDeepCopy.
     clone history: ChatPharoHistory new.
     clone promptPrefix: ''.
     clone response: ''.
