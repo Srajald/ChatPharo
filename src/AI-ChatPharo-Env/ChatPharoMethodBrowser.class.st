@@ -65,67 +65,53 @@ ChatPharoMethodBrowser >> generateTestMethodFor: aMethod [
 
     | testClass selector prompt response methodBody currentAgent |
     testClass := self findOrCreateTestClassFor: aMethod methodClass.
-    selector   := self testSelectorFor: aMethod selector.
-
+    selector := self testSelectorFor: aMethod selector.
     aMethod sourceCode ifNil: [ ^ self inform: 'Cannot generate test. Source code is unavailable.' ].
+
     (testClass includesSelector: selector)
         ifTrue: [ ^ self inform: 'Test method already exists.' ].
 
-    prompt := String streamContents: [ :s |
-        s
-            nextPutAll: 'Generate a test method in Smalltalk SUnit style ';
-            nextPutAll: 'for the following method. Only return the method body ';
-            nextPutAll: '(without the method header):'; cr;
-            nextPutAll: aMethod sourceCode ].
+    prompt := 'Generate a test method in Smalltalk SUnit style for the following method. Only return the method body (without the method header):', String cr, aMethod sourceCode.
 
     currentAgent := ChatPharoSettings default agent.
     currentAgent := (currentAgent isKindOf: ChatPharoAgent)
         ifTrue: [ currentAgent copyForChat ]
         ifFalse: [ currentAgent ].
 
-    response   := currentAgent prompt: prompt.
+    response := currentAgent prompt: prompt.
     methodBody := response ifNil: [ 'self assert: false.' ].
 
-    self
-        generateTestMethodNamed: selector
-        in: testClass
-        withBody: methodBody
+    self generateTestMethodNamed: selector in: testClass withBody: methodBody.
 ]
 
 { #category : 'actions' }
-ChatPharoMethodBrowser >> generateTestMethodNamed: aSelector in: aClass withBody: aMethodBody [
+ChatPharoMethodBrowser >> generateTestMethodNamed: aSelector in: aClass withBody: methodBody [
 	| indentedBody fullSource |
-    indentedBody := String streamContents: [ :stream |
-        aMethodBody linesDo: [ :line |
-            stream
-                nextPutAll: '    ';   "4 spaces"
-                nextPutAll: line; cr ] ].
-    fullSource := String streamContents: [ :s |
-        s
-            nextPutAll: aSelector asString; cr;
-            nextPutAll: indentedBody ].
-    aClass compile: fullSource classified: 'tests'.
+	indentedBody := String streamContents: [ :stream |
+		(methodBody lines) do: [ :line |
+			stream
+				nextPutAll: '    ';
+				nextPutAll: line;
+				cr ] ].
+	fullSource := String streamContents: [ :s |
+		s
+			nextPutAll: aSelector asString;
+			cr;
+			nextPutAll: indentedBody ].
+	aClass compile: fullSource classified: 'tests'.
 ]
 
 { #category : 'utils' }
 ChatPharoMethodBrowser >> findOrCreateTestClassFor: aClass [
-	| testClassName |
-    testClassName := aClass name , 'Test'.
-    ^ Smalltalk
-        at: testClassName asSymbol
-        ifAbsentPut: [
-            TestCase                          
-                subclass: testClassName asSymbol
-                instanceVariableNames: ''
-                classVariableNames: ''
-                poolDictionaries: ''
-                category: aClass category , '-Tests' ]
+	| testClassName testClass |
+	testClassName := aClass name , 'Test'.
+	testClass := Smalltalk at: testClassName ifAbsent: [
+		Object subclass: testClassName asSymbol instanceVariableNames: '' classVariableNames: '' poolDictionaries: '' category: aClass category.
+	].
+	^ testClass
 ]
 
 { #category : 'utils' }
 ChatPharoMethodBrowser >> testSelectorFor: aSelector [
-	| base |
-    base := aSelector asString.
-    ^ ('test', base first asUppercase, base allButFirst) asString
-        withoutSeparators asSymbol
+	^ ('test', (aSelector asString first asUppercase), (aSelector asString allButFirst)) asSymbol
 ]
