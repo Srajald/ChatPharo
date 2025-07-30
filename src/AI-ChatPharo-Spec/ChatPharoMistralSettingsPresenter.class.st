@@ -126,11 +126,11 @@ ChatPharoMistralSettingsPresenter >> initializePresenters [
 { #category : 'private' }
 ChatPharoMistralSettingsPresenter >> handleTemperatureInput: text [
 
-    text isEmpty
+    | value |
+	text isEmpty
         ifTrue: [  "User is deleting / still typing – nothing to do."
                   ^ self ].
 
-    | value |
     [ value := text asFloat ]
         on: Error
         do: [ self inform: 'Temperature must be a number'.
