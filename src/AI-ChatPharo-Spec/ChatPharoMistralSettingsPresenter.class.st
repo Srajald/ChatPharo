@@ -114,19 +114,33 @@ ChatPharoMistralSettingsPresenter >> initializePresenters [
 		                    yourself.
 		
 	temperatureInput whenTextChangedDo: [ :text |
-		| num |
-		[ num := text asNumber ]
-			on: Error do: [ ^ self inform: 'Invalid temperature value' ].
-		(num < 0.0 or: [ num > 1.0 ])
-			ifTrue: [ ^ self inform: 'Temperature must be between 0.0 and 1.0' ].
-		model temperature: num
-	].
+        self handleTemperatureInput: text ].
 
 	testButton := self newButton
 		              label: 'Test Connection';
 		              icon: (self iconNamed: #glamorousGo);
 		              action: [ self testConnection ];
 		              yourself
+]
+
+{ #category : 'private' }
+ChatPharoMistralSettingsPresenter >> handleTemperatureInput: text [
+
+    text isEmpty
+        ifTrue: [  "User is deleting / still typing – nothing to do."
+                  ^ self ].
+
+    | value |
+    [ value := text asFloat ]
+        on: Error
+        do: [ self inform: 'Temperature must be a number'.
+              ^ self ].
+
+    (value < 0.0 or: [ value > 1.0 ])
+        ifTrue: [ self inform: 'Temperature must be between 0.0 and 1.0'.
+                  ^ self ].
+
+    model temperature: value
 ]
 
 { #category : 'accessing' }
