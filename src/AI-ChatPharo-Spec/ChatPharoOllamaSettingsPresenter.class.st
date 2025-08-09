@@ -151,22 +151,28 @@ ChatPharoOllamaSettingsPresenter >> initializePresenters [
 				label: 'Delete';
 				icon: (self iconNamed: #delete);
 				action: [
-					| modelToDelete result |
-					modelToDelete := modelsDrop selectedItem.
-					modelToDelete ifNil: [
-						self inform: 'Please select a model to delete from the list.'
-					] ifNotNil: [
-						[
-							result := model class deleteModel: modelToDelete.
-							self refreshModels.
-							installInput text: ''.
-							result
-								ifTrue: [ self inform: 'Model ', modelToDelete, ' deleted successfully.' ]
-								ifFalse: [ self inform: 'Failed to delete model: ', modelToDelete, '. It may not exist or could not be deleted.' ].
-						] on: Error do: [ :ex |
-							self inform: 'Failed to delete model: ', ex messageText.
+					| modelToDelete |
+					modelToDelete := installInput text trimBoth.  "Get text from the install input field"
+					modelToDelete isEmpty
+						ifTrue: [
+							self inform: 'Please enter the model name to delete.'
+						]
+						ifFalse: [
+							UIManager default defer: [
+								(Delay forMilliseconds: 200) wait.  "Optional delay; can remove if not needed"
+								[
+									| result |
+									result := model class deleteModel: modelToDelete.
+									self refreshModels.
+									installInput text: ''.
+									result
+										ifTrue: [ self inform: 'Model ', modelToDelete, ' deleted successfully.' ]
+										ifFalse: [ self inform: 'Failed to delete model: ', modelToDelete, '. It may not exist or could not be deleted.' ].
+								] on: Error do: [ :ex |
+									self inform: 'Failed to delete model: ', ex messageText.
+								].
+							].
 						].
-					].
 				];
 				yourself.
 	        testButton := self newButton
