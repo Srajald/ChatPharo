@@ -33,14 +33,11 @@ ChatPharoOllamaAgent class >> defaultPort [
 
 { #category : 'api' }
 ChatPharoOllamaAgent class >> deleteModel: aModelName [
-	
 	self isReachable ifFalse: [ ^ false ].
 
 	^ [
 		| client responseText payload json |
-		json := STONJSON toString: { #model -> aModelName } asDictionary.
-		Transcript show: 'Sending delete request for model: ', aModelName; cr.
-		Transcript show: 'JSON payload: ', json; cr.
+		json := STONJSON toString: { #name -> aModelName } asDictionary.
 
 		client := ZnClient new
 			url: 'http://', self defaultHost, ':', self defaultPort, '/api/delete';
@@ -48,8 +45,7 @@ ChatPharoOllamaAgent class >> deleteModel: aModelName [
 			contentType: 'application/json';
 			method: 'POST'.
 
-		responseText := client execute.
-		Transcript show: 'Response: ', responseText; cr.
+		responseText := client execute contents.
 
 		payload := STONJSON fromString: responseText.
 
@@ -58,7 +54,6 @@ ChatPharoOllamaAgent class >> deleteModel: aModelName [
 			ifTrue: [ true ]
 			ifFalse: [ false ]
 	] on: ZnHttpUnsuccessful , NetworkError , Error do: [ :ex |
-		Transcript show: 'Delete model failed: ', ex messageText; cr.
 		false
 	].
 ]

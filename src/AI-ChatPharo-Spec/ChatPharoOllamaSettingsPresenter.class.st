@@ -148,31 +148,27 @@ ChatPharoOllamaSettingsPresenter >> initializePresenters [
 								                 'Model ' , installInput text , ' not found.' ] ];
 		                 yourself.
 	deleteButton := self newButton
-					label: 'Delete';
-					icon: (self iconNamed: #delete);
-					action: [
-						| modelToDelete result |
-						modelToDelete := modelsDrop selectedItem.
-						modelToDelete ifNil: [
-							self inform: 'Please select a model to delete from the list.'
-						] ifNotNil: [
-							(UIManager default confirm: 'Are you sure you want to delete model ', modelToDelete, '?')
-								ifTrue: [
-									[
-										result := model class deleteModel: modelToDelete.
-										self refreshModels.
-										installInput text: ''.
-										result
-											ifTrue: [ self inform: 'Model ', modelToDelete, ' deleted successfully.' ]
-											ifFalse: [ self inform: 'Failed to delete model: ', modelToDelete, '. It may not exist or could not be deleted.' ].
-									] on: Error do: [ :ex |
-										self inform: 'Failed to delete model: ', ex messageText.
-										Transcript show: 'Delete error: ', ex messageText; cr.
-									].
-								].
+				label: 'Delete';
+				icon: (self iconNamed: #delete);
+				action: [
+					| modelToDelete result |
+					modelToDelete := modelsDrop selectedItem.
+					modelToDelete ifNil: [
+						self inform: 'Please select a model to delete from the list.'
+					] ifNotNil: [
+						[
+							result := model class deleteModel: modelToDelete.
+							self refreshModels.
+							installInput text: ''.
+							result
+								ifTrue: [ self inform: 'Model ', modelToDelete, ' deleted successfully.' ]
+								ifFalse: [ self inform: 'Failed to delete model: ', modelToDelete, '. It may not exist or could not be deleted.' ].
+						] on: Error do: [ :ex |
+							self inform: 'Failed to delete model: ', ex messageText.
 						].
-					];
-					yourself.
+					].
+				];
+				yourself.
 	        testButton := self newButton
                                label: 'Test Connection';
                                icon: (self iconNamed: #glamorousGo);
