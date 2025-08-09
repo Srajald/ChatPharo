@@ -17,12 +17,41 @@ ChatPharoMessageTest >> testAccessors [
 ]
 
 { #category : 'tests' }
+ChatPharoMessageTest >> testAssistantLabelAccessors [ 
+
+        | msg |
+        msg := ChatPharoMessage new.
+        msg assistantLabel: 'Bot'.
+        self assert: msg assistantLabel equals: 'Bot'.
+]
+
+{ #category : 'tests' }
+ChatPharoMessageTest >> testDefaultInitialization [
+
+        | msg |
+        msg := ChatPharoMessage new.
+        self assert: msg content equals: String empty.
+        self assert: msg answer equals: String empty.
+        self assert: msg assistantLabel equals: 'Assistant'.
+        self assert: msg feedback isNil.
+        self assert: msg height equals: 140.
+]
+
+{ #category : 'tests' }
 ChatPharoMessageTest >> testFeedbackAccessors [
 
         | msg |
         msg := ChatPharoMessage new.
         msg feedback: true.
         self assert: msg feedback equals: true.
+]
+
+{ #category : 'tests' }
+ChatPharoMessageTest >> testPresenterClass [ 
+
+        | msg |
+        msg := ChatPharoMessage new.
+        self assert: msg presenter class equals: ChatPharoMessagePresenter.
 ]
 
 { #category : 'tests' }

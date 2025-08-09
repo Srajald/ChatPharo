@@ -35,6 +35,16 @@ ChatPharoSettingsTest >> testAvailableApiChoicesReturnsAssociations [
 ]
 
 { #category : 'tests' }
+ChatPharoSettingsTest >> testAvailableApisIncludesDefaultAgents [
+
+    self assert: (settings availableApis includesAll: {
+            ChatPharoNullAgent.
+            ChatPharoGeminiAgent.
+            ChatPharoOllamaAgent.
+            ChatPharoMistralAgent })
+]
+
+{ #category : 'tests' }
 ChatPharoSettingsTest >> testBrowserAutoTabAccessor [
 
     self assert: settings browserAutoTabEnabled.
@@ -44,9 +54,31 @@ ChatPharoSettingsTest >> testBrowserAutoTabAccessor [
 ]
 
 { #category : 'tests' }
+ChatPharoSettingsTest >> testBrowserExtensionEnabledAccessor [ 
+
+    self deny: settings browserExtensionEnabled.
+    settings browserExtensionEnabled: true.
+    self assert: settings browserExtensionEnabled.
+    settings browserExtensionEnabled: false.
+    self deny: settings browserExtensionEnabled
+]
+
+{ #category : 'tests' }
 ChatPharoSettingsTest >> testBrowserToolsEnabledDefault [ 
         self deny: settings browserToolsEnabled isNil.
         self assert: settings browserToolsEnabled notEmpty
+]
+
+{ #category : 'tests' }
+ChatPharoSettingsTest >> testCacheEnabledToggle [
+
+    self assert: settings cacheEnabled.
+
+    settings cacheEnabled: false.
+    self deny: settings cacheEnabled.
+
+    settings cacheEnabled: true.
+    self assert: settings cacheEnabled.
 ]
 
 { #category : 'tests' }
@@ -58,6 +90,16 @@ ChatPharoSettingsTest >> testEnableDisableBrowserTool [
         self deny: (settings browserToolsEnabled includes: name).
         settings enableBrowserTool: name.
         self assert: (settings browserToolsEnabled includes: name)
+]
+
+{ #category : 'tests' }
+ChatPharoSettingsTest >> testFeedbackButtonsEnabledToggle [
+
+    self assert: settings feedbackButtonsEnabled.
+    settings feedbackButtonsEnabled: false.
+    self deny: settings feedbackButtonsEnabled.
+    settings feedbackButtonsEnabled: true.
+    self assert: settings feedbackButtonsEnabled.
 ]
 
 { #category : 'tests' }
@@ -113,4 +155,14 @@ ChatPharoSettingsTest >> testUseApiReplacesAgentSubclass [
 ChatPharoSettingsTest >> testUseModel [
 	settings useModel: 'mock-advanced'.
 	self assert: (mockApi instVarNamed: #currentModel) equals: 'mock-advanced'.
+]
+
+{ #category : 'tests' }
+ChatPharoSettingsTest >> testWelcomeMessageEnabledToggle [
+
+    self assert: settings welcomeMessageEnabled.
+    settings welcomeMessageEnabled: false.
+    self deny: settings welcomeMessageEnabled.
+    settings welcomeMessageEnabled: true.
+    self assert: settings welcomeMessageEnabled.
 ]

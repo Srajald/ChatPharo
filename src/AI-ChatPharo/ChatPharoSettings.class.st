@@ -23,7 +23,10 @@ Class {
 		'browserExtensionEnabled',
 		'browserToolsEnabled',
 		'maximumIterations',
-		'browserAutoTabEnabled'
+		'browserAutoTabEnabled',
+		'cacheEnabled',
+		'feedbackButtonsEnabled',
+		'welcomeMessageEnabled'
 	],
 	#classInstVars : [
 		'Default'
@@ -53,13 +56,17 @@ ChatPharoSettings class >> loadOrNew [
 				  settings := STON fromStream: file.
 				  settings browserExtensionEnabled ifNil: [
 					  settings browserExtensionEnabled: false ].
-			settings browserAutoTabEnabled ifNil: [
-                                          settings browserAutoTabEnabled: true ].
+				  settings browserAutoTabEnabled ifNil: [
+					  settings browserAutoTabEnabled: true ].
 				  settings browserToolsEnabled ifNil: [
 						  settings browserToolsEnabled:
 							  (ChatPharoBrowserEnvironment new tools collect: [ :t |
 								   t name ]) asOrderedCollection ].
 				  settings maximumIterations.
+				  settings cacheEnabled ifNil: [ settings cacheEnabled: true ].
+				  settings feedbackButtonsEnabled ifNil: [
+					  settings feedbackButtonsEnabled: true ].
+				settings welcomeMessageEnabled ifNil: [ settings welcomeMessageEnabled: true ].
 				  ^ settings ]
 				  on: Error
 				  do: [ ^ self new ] ]
@@ -156,6 +163,18 @@ ChatPharoSettings >> browserToolsEnabled: aCollection [
         self class saveDefault
 ]
 
+{ #category : 'accessing' }
+ChatPharoSettings >> cacheEnabled [
+    ^ cacheEnabled ifNil: [ false ]
+]
+
+{ #category : 'accessing' }
+ChatPharoSettings >> cacheEnabled: aBoolean [
+    cacheEnabled := aBoolean.
+    self class setDefault: self.
+    self class saveDefault
+]
+
 { #category : 'initialization' }
 ChatPharoSettings >> disableBrowserTool: toolName [
 
@@ -174,6 +193,18 @@ ChatPharoSettings >> enableBrowserTool: toolName [
 maximumIterations := 3
 ]
 
+{ #category : 'accessing' }
+ChatPharoSettings >> feedbackButtonsEnabled [
+	^ feedbackButtonsEnabled ifNil: [ true ]
+]
+
+{ #category : 'accessing' }
+ChatPharoSettings >> feedbackButtonsEnabled: aBoolean [
+	feedbackButtonsEnabled := aBoolean.
+	self class setDefault: self.
+	self class saveDefault
+]
+
 { #category : 'initialization' }
 ChatPharoSettings >> initialize [
 
@@ -181,6 +212,9 @@ ChatPharoSettings >> initialize [
 	agent := ChatPharoNullAgent new.
 	browserExtensionEnabled := false.
 	browserAutoTabEnabled := true.
+	cacheEnabled := true.
+	feedbackButtonsEnabled := true.
+	welcomeMessageEnabled := true.
 	browserToolsEnabled := (ChatPharoBrowserEnvironment new tools
 		                        collect: [ :t | t name ])
 		                       asOrderedCollection.
@@ -227,4 +261,18 @@ ChatPharoSettings >> useModel: aModelName [
 	agent model: aModelName.
 	self class setDefault: self. 
 	self class saveDefault
+]
+
+{ #category : 'accessing' }
+ChatPharoSettings >> welcomeMessageEnabled [ 
+
+       ^ welcomeMessageEnabled ifNil: [ true ]
+]
+
+{ #category : 'accessing' }
+ChatPharoSettings >> welcomeMessageEnabled: aBoolean [ 
+
+       welcomeMessageEnabled := aBoolean.
+       self class setDefault: self.
+       self class saveDefault
 ]

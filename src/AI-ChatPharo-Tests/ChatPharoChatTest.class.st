@@ -14,8 +14,16 @@ Class {
 ChatPharoChatTest >> setUp [
 
 	super setUp.
+	ChatPharoSettings default welcomeMessageEnabled: false.
 	mockApi := ChatPharoMockAgent new.
 	chat := ChatPharoChat new agent: mockApi
+]
+
+{ #category : 'running' }
+ChatPharoChatTest >> tearDown [
+
+        ChatPharoSettings resetDefault.
+        super tearDown
 ]
 
 { #category : 'running' }
@@ -120,37 +128,50 @@ ChatPharoChatTest >> testEmptyMessageDoesNotCrash [
 { #category : 'running' }
 ChatPharoChatTest >> testManyChatsRemainIsolated [
 
-    | chats |
-    chats := (1 to: 5) collect: [:i | ChatPharoChat new agent: ChatPharoMockAgent new].
+	| chats |
+	chats := (1 to: 5) collect: [ :i |
+		         ChatPharoChat new agent: ChatPharoMockAgent new ].
 
-    1 to: 5 do: [:i |
-        (chats at: i) sendMessage: 'msg', i asString
-    ].
+	1 to: 5 do: [ :i | (chats at: i) sendMessage: 'msg' , i asString ].
 
-    [ chats allSatisfy: [:c | (c instVarNamed: #promptProcess) isTerminated ] ] whileFalse: [ (Delay forMilliseconds: 10) wait ].
+	[
+		chats allSatisfy: [ :c |
+			(c instVarNamed: #promptProcess) isTerminated ] ] whileFalse: [
+		(Delay forMilliseconds: 10) wait ].
 
-    self assert: (chats allSatisfy: [:c | c messages size = 1]).
-    self assert: ((chats collect: [:c | c messages last answer]) asSet size) = 5.
+	self assert: (chats allSatisfy: [ :c | c messages size = 1 ]).
+	self assert:
+		(chats collect: [ :c | c messages last answer ]) asSet size = 5
 ]
 
 { #category : 'running' }
-ChatPharoChatTest >> testMultipleChatsDoNotShareState [ 
-
-    | chat1 chat2 |
-    chat1 := ChatPharoChat new agent: ChatPharoMockAgent new.
-    chat2 := ChatPharoChat new agent: ChatPharoMockAgent new.
-
-    chat1 sendMessage: 'hello from chat1'.
-    chat2 sendMessage: 'hello from chat2'.
+ChatPharoChatTest >> testMockAgentSetsAssistantLabel [
+    chat sendMessage: 'hi'.
 
     [
-        (chat1 instVarNamed: #promptProcess) isTerminated and: [
-            (chat2 instVarNamed: #promptProcess) isTerminated
-        ]
+        (chat instVarNamed: #promptProcess) isTerminated
     ] whileFalse: [ (Delay forMilliseconds: 10) wait ].
 
-    self assert: chat1 messages size = 1.
-    self assert: chat2 messages size = 1.
+    self assert: (chat messages last assistantLabel) equals: 'Assistant'.
+]
+
+{ #category : 'running' }
+ChatPharoChatTest >> testMultipleChatsDoNotShareState [
+
+	| chat1 chat2 |
+	chat1 := ChatPharoChat new agent: ChatPharoMockAgent new.
+	chat2 := ChatPharoChat new agent: ChatPharoMockAgent new.
+
+	chat1 sendMessage: 'hello from chat1'.
+	chat2 sendMessage: 'hello from chat2'.
+
+	[
+		(chat1 instVarNamed: #promptProcess) isTerminated and: [
+			(chat2 instVarNamed: #promptProcess) isTerminated ] ] whileFalse: [
+		(Delay forMilliseconds: 10) wait ].
+
+	self assert: chat1 messages size = 1.
+	self assert: chat2 messages size = 1
 ]
 
 { #category : 'running' }
@@ -167,32 +188,48 @@ ChatPharoChatTest >> testMultipleConcurrentMessagesHandledSafely [
 ]
 
 { #category : 'running' }
-ChatPharoChatTest >> testSameQuestionReturnsCachedAnswer [ 
-
-    | firstSize firstAnswer |
-    chat sendMessage: 'repeat'.
-    [ (chat instVarNamed: #promptProcess) isTerminated ] whileFalse: [ (Delay forMilliseconds: 10) wait ].
-    firstSize := mockApi history size.
-    firstAnswer := chat messages last answer.
-
-    chat sendMessage: 'repeat'.
-
-    self assert: chat messages size equals: 2.
-    self assert: (chat messages last answer) equals: firstAnswer.
-    self assert: mockApi history size equals: firstSize.
-]
-
-{ #category : 'running' }
-ChatPharoChatTest >> testSendMessageAddsAssistantResponse [
+ChatPharoChatTest >> testNullAgentSetsAssistantBotLabel [ 
+    | nullAgent |
+    nullAgent := ChatPharoNullAgent new.
+    chat agent: nullAgent.
     chat sendMessage: 'hi'.
 
     [
         (chat instVarNamed: #promptProcess) isTerminated
     ] whileFalse: [ (Delay forMilliseconds: 10) wait ].
 
-    self assert: chat messages size equals: 1.
-    self assert: (chat messages last answer) equals: '<<MOCK-DEFAULT-REPLY to: hi>>'.
+    self assert: (chat messages last assistantLabel) equals: 'Assistant bot'.
+]
 
+{ #category : 'running' }
+ChatPharoChatTest >> testSameQuestionReturnsCachedAnswer [
+
+	| firstSize firstAnswer |
+	chat sendMessage: 'repeat'.
+	[ (chat instVarNamed: #promptProcess) isTerminated ] whileFalse: [
+		(Delay forMilliseconds: 10) wait ].
+	firstSize := mockApi history size.
+	firstAnswer := chat messages last answer.
+
+	chat sendMessage: 'repeat'.
+
+	self assert: chat messages size equals: 2.
+	self assert: chat messages last answer equals: firstAnswer.
+	self assert: mockApi history size equals: firstSize
+]
+
+{ #category : 'running' }
+ChatPharoChatTest >> testSendMessageAddsAssistantResponse [
+
+	chat sendMessage: 'hi'.
+
+	[ (chat instVarNamed: #promptProcess) isTerminated ] whileFalse: [
+		(Delay forMilliseconds: 10) wait ].
+
+	self assert: chat messages size equals: 1.
+	self
+		assert: chat messages last answer
+		equals: '<<MOCK-DEFAULT-REPLY to: hi>>'
 ]
 
 { #category : 'running' }
@@ -209,6 +246,18 @@ ChatPharoChatTest >> testToolExecutionCallbackTriggered [
     [ (chat instVarNamed: #promptProcess) isTerminated ] whileFalse: [ (Delay forMilliseconds: 10) wait ].
 
     self assert: count equals: 1.
+]
+
+{ #category : 'running' }
+ChatPharoChatTest >> testWelcomeMessageToggle [
+
+    | withWelcome withoutWelcome |
+    ChatPharoSettings default welcomeMessageEnabled: true.
+    withWelcome := ChatPharoChat new agent: ChatPharoMockAgent new.
+    self assert: withWelcome messages size equals: 1.
+    ChatPharoSettings default welcomeMessageEnabled: false.
+    withoutWelcome := ChatPharoChat new agent: ChatPharoMockAgent new.
+    self assert: withoutWelcome messages isEmpty.
 ]
 
 { #category : 'running' }

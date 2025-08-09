@@ -44,6 +44,16 @@ ChatPharoHistorySaverTest >> testHistoryStringOnOutputsCorrectFormat [
 ]
 
 { #category : 'running' }
+ChatPharoHistorySaverTest >> testOpenAIChatMessagesOnWithNilContentAddsPlaceholder [ 
+
+        | strm |
+        saver content: nil.
+        strm := Array new writeStream.
+        saver putOpenAIChatMessagesOn: strm.
+        self assert: (strm contents first at: 'content') equals: '[No assistant response]'.
+]
+
+{ #category : 'running' }
 ChatPharoHistorySaverTest >> testOpenAIChatMessagesOnWithToolCalls [ 
 
         | call strm |
@@ -52,6 +62,18 @@ ChatPharoHistorySaverTest >> testOpenAIChatMessagesOnWithToolCalls [
         strm := Array new writeStream.
         saver putOpenAIChatMessagesOn: strm.
         self assert: (strm contents first at: 'tool_calls') notNil.
+]
+
+{ #category : 'running' }
+ChatPharoHistorySaverTest >> testOpenAIChatMessagesOnWithToolCallsAddsToolResultMessage [
+
+        | call strm |
+        call := ChatPharoHistorySaverToolCall id: '1' functionName: 'f' arguments: '{}' content: 'result'.
+        saver toolCalls: { call }.
+        strm := Array new writeStream.
+        saver putOpenAIChatMessagesOn: strm.
+        self assert: strm contents size equals: 2.
+        self assert: (strm contents second at: 'role') equals: 'tool'.
 ]
 
 { #category : 'running' }
