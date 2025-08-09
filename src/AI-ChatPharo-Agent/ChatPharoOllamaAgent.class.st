@@ -43,7 +43,7 @@ ChatPharoOllamaAgent class >> deleteModel: aModelName [
 			url: 'http://', self defaultHost, ':', self defaultPort, '/api/delete';
 			entity: (ZnEntity with: json);
 			contentType: 'application/json';
-			method: 'POST'.
+			method: 'DELETE'.
 
 		responseText := client execute contents.
 
