@@ -26,7 +26,8 @@ Class {
 		'onAnswerReceived',
 		'history',
 		'onToolExecution',
-		'cache'
+		'cache',
+        'onAnswerStarted'
 	],
 	#category : 'AI-ChatPharo',
 	#package : 'AI-ChatPharo'
@@ -42,6 +43,15 @@ ChatPharoChat >> addAssistantMessage: answerText [
     messages last
         answer: answerText;
         assistantLabel: label
+]
+
+{ #category : 'running' }
+ChatPharoChat >> addErrorMessage: aString [
+	history addAssistant: aString.
+	messages add: (ChatPharoMessage new
+			 content: aString;
+			 assistantLabel: 'Error';
+			 yourself)
 ]
 
 { #category : 'running' }
@@ -80,13 +90,18 @@ ChatPharoChat >> agent: anObject [
 { #category : 'running' }
 ChatPharoChat >> cancelMessage [
 
-	promptProcess terminate
+	promptProcess ifNotNil: [ promptProcess terminate ].
 ]
 
 { #category : 'running' }
 ChatPharoChat >> clearCache [
 
 	cache removeAll
+]
+
+{ #category : 'running' }
+ChatPharoChat >> clearCacheFor: aText [
+	cache removeKey: aText ifAbsent: [ ].
 ]
 
 { #category : 'running' }
@@ -136,6 +151,8 @@ ChatPharoChat >> initialize [
 	history := ChatPharoHistory new.
 	messages := OrderedCollection new.
 	onToolExecution := nil.
+    onAnswerStarted := nil.
+	onAnswerReceived := nil.
 	cache := Dictionary new.
 	        (ChatPharoSettings default welcomeMessageEnabled)
                 ifTrue: [ self addWelcomeMessage ]
@@ -171,6 +188,7 @@ ChatPharoChat >> sendMessage: aText [
                         onAnswerReceived ifNotNil: [ :blk | blk value: messages last ]
                 ]
                 ifFalse: [
+                        onAnswerStarted ifNotNil: [ :blk | blk value ].
                         promptProcess := [
                                  | backend |
                                  backend := self agent.
@@ -179,7 +197,11 @@ ChatPharoChat >> sendMessage: aText [
                                  answer := backend getResponseForPrompt: aText.
                                  cache at: aText put: answer.
                                  self addAssistantMessage: answer.
-                                 onAnswerReceived ifNotNil: [ :blk | blk value: messages last ] ] fork
+                                 onAnswerReceived ifNotNil: [ :blk | blk value: messages last ] ]
+                                    on: Error do: [ :ex | 
+                                        self addErrorMessage: 'An error occurred: ', ex messageText.
+                                        onAnswerReceived ifNotNil: [ :blk | blk value: messages last ]
+                                    ] fork
                 ]
 ]
 
@@ -200,6 +222,11 @@ promptProcess ifNotNil: [ promptProcess waitUntil: [ promptProcess isTerminated 
 ChatPharoChat >> whenAnswerReceivedDo: aBlock [
 
 	onAnswerReceived := aBlock
+]
+
+{ #category : 'running' }
+ChatPharoChat >> whenAnswerStartedDo: aBlock [
+    onAnswerStarted := aBlock
 ]
 
 { #category : 'running' }
