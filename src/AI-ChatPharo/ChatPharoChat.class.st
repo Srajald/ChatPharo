@@ -89,8 +89,10 @@ ChatPharoChat >> agent: anObject [
 
 { #category : 'running' }
 ChatPharoChat >> cancelMessage [
-
-	promptProcess ifNotNil: [ promptProcess terminate ].
+    promptProcess ifNotNil: [
+        [ promptProcess terminate ] on: Error do: [ :ex | "ignore termination errors" ].
+        promptProcess := nil.
+    ].
 ]
 
 { #category : 'running' }
@@ -213,9 +215,8 @@ ChatPharoChat >> triggerToolExecution [
 
 { #category : 'running' }
 ChatPharoChat >> waitForPromptProcessDone [ 
-    | promptProcess |
-promptProcess ifNotNil: [ promptProcess waitUntil: [ promptProcess isTerminated ] ].
-
+    
+    promptProcess ifNotNil: [ promptProcess waitUntil: [ promptProcess isTerminated ] ].
 ]
 
 { #category : 'running' }
